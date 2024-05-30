@@ -1,0 +1,457 @@
+{% extends 'padre/base.html' %}
+{% load static %}
+{% block titulo %}
+FlyKicks || Productos
+{% endblock titulo %}
+{% block css %}
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+  .modal {
+    display: none;
+    /* Por defecto, oculto */
+    position: fixed;
+    /* Posicionamiento fijo */
+    z-index: 1;
+    /* Se superpone sobre otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo oscuro semitransparente */
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    /* Centra verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+  }
+
+  /* Estilos para el botón de cerrar el modal */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #f2f2f2;
+  }
+
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: #333;
+  }
+
+  .navbar {
+    display: flex;
+    padding: 0 10px;
+    max-width: 1200px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar input#menu-toggler {
+    display: none;
+  }
+
+  .navbar #hamburger-btn {
+    cursor: pointer;
+    display: none;
+  }
+
+  .navbar .all-links {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar .all-links li {
+    position: relative;
+    list-style: none;
+  }
+
+  .navbar .logo a {
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  header a,
+  footer a {
+    margin-left: 40px;
+    text-decoration: none;
+    color: #fff;
+    height: 100%;
+    padding: 20px 0;
+    display: inline-block;
+  }
+
+  header a:hover,
+  footer a:hover {
+    color: #ddd;
+  }
+
+  .homepage {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    background: url("{% static 'img/lebron_ad.jpg' %}") no-repeat center center/cover;
+  }
+
+  @media (max-width: 480px) {
+    .homepage {
+      background: url("{% static 'img/fotocel.PNG' %}") no-repeat center center/cover;
+    }
+  }
+
+  .homepage::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .homepage .content {
+    display: flex;
+    height: 85%;
+    z-index: 3;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .homepage .content h1 {
+    font-size: 60px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .homepage .content .text {
+    margin-bottom: 50px;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .content a {
+    color: #000;
+    display: block;
+    text-transform: uppercase;
+    font-size: 18px;
+    margin: 0 10px;
+    padding: 10px 30px;
+    border-radius: 5px;
+    background: #fff;
+    border: 2px solid #fff;
+    transition: 0.4s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+  }
+
+  .content a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 80px 0 0;
+  }
+
+  section h2 {
+    font-size: 2rem;
+  }
+
+  section>p {
+    text-align: center;
+  }
+
+  section .cards {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin-top: 50px;
+    padding: 0 10px;
+    justify-content: space-between;
+  }
+
+  section .cards .card {
+    background: #fff;
+    padding: 40px 15px;
+    list-style: none;
+    border-radius: 5px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.04);
+    margin-bottom: 40px;
+    width: calc(100% / 3 - 30px);
+    text-align: center;
+  }
+
+  .portfolio .cards .card {
+    padding: 0 0 20px;
+  }
+
+  .services .card img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+    border-radius: 100%;
+    object-fit: cover;
+  }
+
+  .portfolio .card img {
+    width: 100%;
+    padding-bottom: 10px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 7px;
+  }
+
+  .cards .card p {
+    padding: 0 15px;
+    margin-top: 5px;
+  }
+
+  @media screen and (max-width: 860px) {
+    .navbar .all-links {
+      position: fixed;
+      left: -100%;
+      width: 300px;
+      display: block;
+      height: 100vh;
+      top: 75px;
+      background: #333;
+      transition: left 0.3s ease;
+    }
+
+    .navbar #menu-toggler:checked~.all-links {
+      left: 0;
+    }
+
+    .navbar .all-links li {
+      font-size: 18px;
+    }
+
+    .navbar #hamburger-btn {
+      display: block;
+    }
+
+    section>p {
+      text-align: center;
+    }
+
+    section .cards .card {
+      width: calc(100% / 2 - 15px);
+      margin-bottom: 30px;
+    }
+
+    .homepage .content h1 {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .homepage .content .text {
+      font-size: 17px;
+    }
+
+    .content a {
+      font-size: 17px;
+      padding: 9px 20px;
+    }
+
+    .contact .row {
+      flex-direction: column;
+    }
+
+    .contact .row .col {
+      width: 100%;
+    }
+
+    .contact .row .col:last-child {
+      margin-top: 40px;
+    }
+
+    footer a {
+      height: 0;
+    }
+  }
+
+  @media screen and (max-width: 560px) {
+    section .cards .card {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+  }
+
+  .formulario {
+    margin-top: 10px;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-left: 10px;
+  }
+
+  .form-row label {
+    margin-right: 5px;
+  }
+
+  .form-row input {
+    margin-left: 5px;
+  }
+
+  .precio {
+    margin-left: 20px !important;
+  }
+</style>
+<script>
+  function filtrarPorNombre() {
+    var filtro = document.getElementById("filtroNombre").value.toUpperCase();
+    var cartas = document.querySelectorAll(".card");
+
+    for (var i = 0; i < cartas.length; i++) {
+      var nombre = cartas[i].querySelector("h3").textContent.toUpperCase();
+      if (nombre.includes(filtro)) {
+        cartas[i].style.display = "";
+      } else {
+        cartas[i].style.display = "none";
+      }
+    }
+  }
+</script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+{% endblock css %}
+{% block contenido %}
+<section class="homepage" id="home"></section>
+<br>
+<section>
+  <div class="filtro">
+    <label for="filtroNombre"></label>
+    <input type="text" id="filtroNombre">
+    <button type="button" class="btn btn-dark" onclick="filtrarPorNombre()">Buscar</button>
+  </div>
+</section>
+
+
+
+<section class="portfolio" id="portfolio">
+  <h2>Nuestros Productos</h2>
+  <p>Hecha un vistazo a las zapatillas exclusivas que tenemos.</p>
+
+  <ul class="cards">
+    {% for producto in productos_lista %}
+    <li class="card">
+      <img src="{{ producto.foto }}" alt="img">
+      <h3>{{ producto.nombre }}</h3>
+      <p>${{ producto.precio }}</p>
+      <p>{{ producto.stars }}</p>
+      <div class="btn-group d-flex justify-content-between align-items-center">
+        <button type="button" class="btn-agregar btn btn-sm btn-outline-secondary"
+          onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}', '{{ producto.foto|escapejs }}');">Agregar
+          al carrito</button>
+      </div>
+    </li>
+    {% endfor %}
+    {% for producto in productos_bd_lista %}
+    <div class="card">
+      <img src="{{ producto.foto }}" alt="img">
+      <h3>{{ producto.nombre }}</h3>
+      <p>${{ producto.precio }}</p>
+      <p>{{ producto.stars }}</p>
+      <div class="btn-group d-flex justify-content-between align-items-center">
+        <button type="button" class="btn-agregar btn btn-sm btn-outline-secondary"
+          onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}', '{{ producto.foto|escapejs }}');">Agregar
+          al carrito</button>
+        {% if user.is_superuser %}
+        <button type="button" class="btn-modificar btn btn-sm btn-outline-primary"
+          onclick="mostrarFormulario('{{ producto.id }}');">Modificar</button>
+        <form method="post" action="{% url 'eliminar_producto' producto.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-eliminar btn btn-sm btn-outline-danger">Eliminar</button>
+        </form>
+      </div>
+      <div id="formulario-{{ producto.id }}" class="formulario" style="display: none;">
+        <form method="post" action="{% url 'guardar_cambios' producto.id %}">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="form-row">
+            <label for="id_nombre">Nombre:</label>
+            <input type="text" name="nombre" value="{{ producto.nombre }}">
+          </div>
+          <div class="form-row precio">
+            <label for="id_precio">Precio :</label>
+            <input type="number" name="precio" value="{{ producto.precio }}">
+          </div>
+          <div class="form-row">
+            <label for="id_stars">Estrellas:</label>
+            <input type="text" name="stars" value="{{ producto.stars }}">
+          </div>
+          <div class="form-row">
+            <label for="id_url">URL foto:</label>
+            <input type="text" name="foto" value="{{ producto.foto }}">
+          </div>
+          <button type="submit" class="btn btn-dark">Guardar cambios</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+  </ul>
+</section>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>¡Felicitaciones!</h2>
+    <p>¡Ganaste un codigo de descuento!, ingresa INVIERNO2023 antes de tu pago.</p>
+  </div>
+</div>
+
+<script src="{% static 'js/carrito.js' %}"></script>
+<script>
+  window.onload = function () {
+    openModal();
+  };
+</script>
+{% endblock contenido %}
