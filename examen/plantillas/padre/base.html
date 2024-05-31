@@ -179,27 +179,7 @@ integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJ
       justify-content: space-between;
     }
 
-    section.about {
-      margin: 0 auto;
-      max-width: 1200px;
-    }
 
-    .about .company-info {
-      margin-top: 30px;
-    }
-
-    .about h3 {
-      margin: 30px 0 10px;
-    }
-
-    .about .team {
-      text-align: left;
-      width: 100%;
-    }
-
-    .about .team ul {
-      padding-left: 20px;
-    }
 
     section .cards .card {
       background: #fff;
@@ -212,10 +192,6 @@ integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJ
       text-align: center;
     }
 
-    .portfolio .cards .card {
-      padding: 0 0 20px;
-    }
-
     .services .card img {
       width: 120px;
       height: 120px;
@@ -226,6 +202,7 @@ integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJ
 
     .portfolio .card img {
       width: 100%;
+      height: 250px;
       padding-bottom: 10px;
       aspect-ratio: 16 / 9;
       object-fit: cover;
@@ -237,68 +214,7 @@ integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJ
       margin-top: 5px;
     }
 
-    .about .row {
-      padding: 0 10px;
-    }
 
-    .contact .row {
-      margin: 60px 0 90px;
-      display: flex;
-      max-width: 1200px;
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .contact .row .col {
-      padding: 0 10px;
-      width: calc(100% / 2 - 50px);
-    }
-
-    .contact .col p {
-      margin-bottom: 10px;
-    }
-
-    .contact .col p i {
-      color: #7a7a7a;
-      margin-right: 10px;
-    }
-
-    .contact form input {
-      height: 45px;
-      margin-bottom: 20px;
-      padding: 10px;
-      width: 100%;
-      font-size: 16px;
-      outline: none;
-      border: 1px solid #bfbfbf;
-    }
-
-    .contact form textarea {
-      padding: 10px;
-      width: 100%;
-      font-size: 16px;
-      height: 150px;
-      outline: none;
-      resize: vertical;
-      border: 1px solid #bfbfbf;
-    }
-
-    .contact form button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 17px;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      background: #333;
-      transition: 0.2s ease;
-    }
-
-    .contact form button:hover {
-      background: #525252;
-    }
 
     footer {
       width: 100%;
@@ -323,7 +239,11 @@ integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJ
     footer a {
       padding: 0;
     }
-
+    .carousel-item img {
+    width: 100%;
+    height: 400px; /* Puedes ajustar esta altura según tus necesidades */
+    object-fit: fill;
+   }
     @media screen and (max-width: 860px) {
       .navbar .all-links {
         position: fixed;
@@ -370,18 +290,6 @@ integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJ
       .content a {
         font-size: 17px;
         padding: 9px 20px;
-      }
-
-      .contact .row {
-        flex-direction: column;
-      }
-
-      .contact .row .col {
-        width: 100%;
-      }
-
-      .contact .row .col:last-child {
-        margin-top: 40px;
       }
 
       footer a {

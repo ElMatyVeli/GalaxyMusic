@@ -1,45 +1,45 @@
 productosdestacados = [
     {
         'id': 1,
-        'nombre': 'RS-X Puma X Final Fantasy XIV ',
-        'precio': '99.990',
+        'nombre': 'Ibanez RG350DXZ - White',
+        'precio': '599.990',
         'stars':'★★★★★(20)',
-        'foto': 'https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa/global/307601/01/sv01/fnd/CHL/w/640/h/640/fmt/png'
+        'foto': 'https://audiomusicacl.vtexassets.com/arquivos/ids/167426-1200-auto?v=637801427835370000&width=1200&height=auto&aspect=true'
     },
     {
         'id': 2,
-        'nombre': 'RS-X Puma Geek X Buzzlightyear ',
-        'precio': '69.990',
-        'stars':'★★★★★(20)',
-        'foto':'https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa/global/391174/05/sv01/fnd/CHL/w/1000/h/1000/fmt/png',
+        'nombre': 'Ibanez IJSR190U - Black ',
+        'precio': '349.990',
+        'stars':'★★★★(10)',
+        'foto':'https://audiomusicacl.vtexassets.com/arquivos/ids/167436-1200-auto?v=637801427871700000&width=1200&height=auto&aspect=true',
     },
    {
         'id': 3,
-        'nombre': 'RS-X Puma Reinvention EVO ',
-        'precio': '99.990',
+        'nombre': 'Epiphone SG Special P-90 ',
+        'precio': '599.990',
         'stars':'★★★★★(20)',
-        'foto': 'https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa/global/369579/01/sv01/fnd/CHL/w/640/h/640/fmt/png'
+        'foto': 'https://audiomusicacl.vtexassets.com/arquivos/ids/168944-1200-auto?v=637801433230170000&width=1200&height=auto&aspect=true'
     },
     {
         'id': 4,
-        'nombre': 'Nike Air Force 1 07 LX NBHD ',
-        'precio': '109.990',
+        'nombre': 'Teclado Personal Korg EK-50 ',
+        'precio': '419.990',
         'stars':'★★★★★(20)',
-        'foto': 'https://nikeclprod.vteximg.com.br/arquivos/ids/695848/DV7186_300_A_PREM.jpg?v=638169944224900000',
+        'foto': 'https://audiomusicacl.vtexassets.com/arquivos/ids/170768-1200-auto?v=637801439643730000&width=1200&height=auto&aspect=true',
     },
     {
         'id': 5,
-        'nombre': 'Spiderverse Air Jordan 1 Retro Hi OG ',
-        'precio': '219.990',
+        'nombre': 'Batería electrónica Roland TD-1DMK-230 ',
+        'precio': '899.990',
         'stars':'★★★★★(20)',
-        'foto':'https://nikeclprod.vteximg.com.br/arquivos/ids/714369-1000-1000/DV1748_601_A_PREM.jpg?v=638193276332200000',
+        'foto':'https://audiomusicacl.vtexassets.com/arquivos/ids/167200-1200-auto?v=637801426972430000&width=1200&height=auto&aspect=true',
     },
    {
         'id': 6,
-        'nombre': "Celtics Jayson Tatum's MAX ",
-        'precio': '126.990',
+        'nombre': "Audífonos de monitoreo Sennheiser HD 26 PRO ",
+        'precio': '374.990',
         'stars':'★★★★★(20)',
-        'foto': 'https://nikeclprod.vteximg.com.br/arquivos/ids/711506-1000-1000/DX5571_180_A_PREM.jpg?v=638187440113730000',
+        'foto': 'https://audiomusicacl.vtexassets.com/arquivos/ids/179074-1200-auto?v=637929071842800000&width=1200&height=auto&aspect=true',
     },
     
 ]
