@@ -77,18 +77,19 @@ WSGI_APPLICATION = 'examen.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sneakers',
+        'NAME': 'GalaxyMusic',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': 3306
+        'PASSWORD': '123456',
+        'HOST': '35.202.240.176',
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation
