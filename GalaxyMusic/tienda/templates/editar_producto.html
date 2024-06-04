@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Encabezado -->
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">GalaxyMusic</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'crear_producto' %}">Crear Producto</a> <!-- Enlace a la página de creación de productos -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'productos' %}">Productos</a>
+                </li>
+                </li>
+                {% if user.is_anonymous %}
+                <li><a class="nav-link" href="{% url 'mostrar_entrar' %}">Entrar</a></li>
+                {% endif %}
+                <li><a class="nav-link" href="{% url 'mostrar_registro' %}">Registro</a></li>
+                {% if user.is_authenticated %}
+                <li><a class="nav-link"  href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Fin Navbar -->
+    <h1>Editar Producto</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar cambios</button>
+    </form>
+</body>
+</html>
