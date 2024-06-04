@@ -1,33 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- TITLE -->
-    <title>
-        {% block title %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- TITLE -->
+        <title>
+            {% block title %}
+            {% endblock %}
+        </title>
+        <!-- BOOTSTRAP CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+        <!-- CSS -->
+        {% block css %}
         {% endblock %}
-    </title>
-    <!-- BOOTSTRAP CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- CSS -->
-    {% block css %}
-    {% endblock %}
-</head>
-<body>
-    <!-- NAVBAR -->
-    {% include 'Base/navbar.html' %}
 
-    <!-- CONTENT -->
-    {% block body %}
-    {% endblock %}   
-    
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+        <style>
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--quaternary-color);
+            }
 
-    <!-- BLOCK JS -->
-    {% block js %}
-    {% endblock %}
-</body>
+            :root {
+                --primary-color: #C5001A;
+                --secondary-color: #E4E3DB;
+                --tertiary-color: #113743;
+                --quaternary-color: #C5BEBA;
+            }
+        
+            /* Estilos para el navbar */
+            nav{
+                background-color: var(--primary-color);
+                box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.5);
+                margin-bottom: 3rem;
+            }
+
+            .nav-link, .navbar-brand{
+                color: var(--secondary-color);
+            }
+
+            .nav-link{
+                border-bottom: 0.5px solid var(--secondary-color);
+                margin: 0px 0.7rem;
+            }
+
+            .navbar-brand{
+                font-weight: bold;
+                font-size: 1.5rem;
+                font-style: italic;
+            }
+
+            body{
+                background-color: var(--tertiary-color);
+            }
+
+            .nav-link:hover, .navbar-brand:hover{
+                scale: 1.1;
+                transition: all 0.15s ease-in-out;
+                color: var(--secondary-color);
+            }
+
+    </style>
+
+    </head>
+
+    <body>
+        <!-- NAVBAR -->
+        {% include 'Base/navbar.html' %}
+
+        <!-- CONTENT -->
+        {% block body %}
+        {% endblock %}
+
+        <!-- BOOTSTRAP JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+        <!-- BLOCK JS -->
+        {% block js %}
+        {% endblock %}
+    </body>
 </html>

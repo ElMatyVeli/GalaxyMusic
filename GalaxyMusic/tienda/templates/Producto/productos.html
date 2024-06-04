@@ -1,76 +1,93 @@
 {% extends 'Base/base.html' %}
 {% load static %}
 
+{% block title %}
+GalaxyMusic | Productos
+{% endblock %}
+
 {% block css %}
-    <style>
-        .card {
-            width: 300px; /* Tamaño fijo para todas las cartas */
-            margin-bottom: 20px;
-        }
-        .card img {
-            height: 200px; /* Altura fija para todas las imágenes */
-            object-fit: cover;
-        }
-    </style>
+<style>
+  .card {
+    width: 300px; /* Tamaño fijo para todas las cartas */
+    margin-bottom: 20px;
+  }
+  .card img {
+    height: 200px; /* Altura fija para todas las imágenes */
+    object-fit: cover;
+  }
+</style>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="mt-5 mb-4">Todos los Productos</h1>
-        <div class="row">
-            {% for producto in productos %}
-            <div class="col-md-4">
-                <a href="{% url 'detalle_producto' producto.id %}">
-                    <div class="card">
-                        {% if producto.foto %}
-                            <img src="{{ producto.foto.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-                        {% else %}
-                            <img src="{% static 'default.jpg' %}" class="card-img-top" alt="Imagen no disponible">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ producto.nombre }}</h5>
-                            <p class="card-text">Código:{{ producto.codigo }}</p>
-                            <p class="card-text">Precio: ${{ producto.precio }}</p>
-                            <p class="card-text">{{ producto.descripcion }}</p>
-                            <p class="card-text">Stock:{{ producto.stock }}</p>
-                            <div class="d-flex justify-content-end">
-                                <a href="#" class="btn btn-sm btn-danger eliminar-producto" data-producto-id="{{ producto.id }}"><i class="fas fa-trash-alt"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+<div class="container">
+  <h1 class="mt-5 mb-4">Todos los Productos</h1>
+  <div class="row">
+    {% for producto in productos %}
+    <div class="col-md-4">
+      <a href="{% url 'detalle_producto' producto.id %}">
+        <div class="card">
+          {% if producto.foto %}
+          <img
+            src="{{ producto.foto.url }}"
+            class="card-img-top"
+            alt="{{ producto.nombre }}"
+          />
+          {% else %}
+          <img
+            src="{% static 'default.jpg' %}"
+            class="card-img-top"
+            alt="Imagen no disponible"
+          />
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ producto.nombre }}</h5>
+            <p class="card-text">Código:{{ producto.codigo }}</p>
+            <p class="card-text">Precio: ${{ producto.precio }}</p>
+            <p class="card-text">{{ producto.descripcion }}</p>
+            <p class="card-text">Stock:{{ producto.stock }}</p>
+            <div class="d-flex justify-content-end">
+              <a
+                href="#"
+                class="btn btn-sm btn-danger eliminar-producto"
+                data-producto-id="{{ producto.id }}"
+                ><i class="fas fa-trash-alt"></i
+              ></a>
             </div>
-            {% endfor %}
+          </div>
         </div>
+      </a>
     </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
 
 {% block js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $(".eliminar-producto").click(function(e) {
-            e.preventDefault();
-            var productoId = $(this).data('producto-id');
-            
-            if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-                $.ajax({
-                    url: '/producto/' + productoId + '/eliminar/', // URL para eliminar producto
-                    type: 'POST',
-                    data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}', // Asegúrate de enviar el token CSRF
-                    },
-                    success: function(response) {
-                        // Recargar la página después de la eliminación del producto
-                        location.reload();
-                    },
-                    error: function(xhr, errmsg, err) {
-                        // Maneja el error, si lo hay
-                        console.log(xhr.status + ": " + xhr.responseText);
-                    }
-                });
-            }
+  $(document).ready(function () {
+    $(".eliminar-producto").click(function (e) {
+      e.preventDefault();
+      var productoId = $(this).data("producto-id");
+
+      if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+        $.ajax({
+          url: "/producto/" + productoId + "/eliminar/", // URL para eliminar producto
+          type: "POST",
+          data: {
+            csrfmiddlewaretoken: "{{ csrf_token }}", // Asegúrate de enviar el token CSRF
+          },
+          success: function (response) {
+            // Recargar la página después de la eliminación del producto
+            location.reload();
+          },
+          error: function (xhr, errmsg, err) {
+            // Maneja el error, si lo hay
+            console.log(xhr.status + ": " + xhr.responseText);
+          },
         });
+      }
     });
+  });
 </script>
 {% endblock %}
