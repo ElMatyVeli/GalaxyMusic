@@ -1,0 +1,37 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | Ingresar
+{% endblock %}
+
+{% block body %}
+<!-- FORM -->   
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header class="loginheader">Login</header>
+            <br>
+            <div class="form-floating">
+              <br>
+              {{ formulario.usuario.label}}
+              {{ formulario.usuario }}
+  
+            </div>
+            <div class="form-floating">
+              <br>                  
+              {{ formulario.contrasenia_usuario.label }}
+              {{ formulario.contrasenia_usuario}}
+            </div>
+            <button class="w-100 btn btn-dark" type="submit">Entrar</button>
+            <div class="signup">
+                <span class="signup">¿No tienes una cuenta?
+                    <a class="colorletras" href="{% url 'mostrar_registro' %}">Registrarse</a>
+                </span>
+            </div>
+        </div>
+    </form>
+  </div>
+{% endblock %}

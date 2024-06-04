@@ -15,12 +15,12 @@ def index(request):
 
 def productos(request):
     productos = Producto.objects.all()
-    return render(request, 'productos.html', {'productos': productos})
+    return render(request, 'Producto/productos.html', {'productos': productos})
 
 
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, pk=producto_id)
-    return render(request, 'detalle_producto.html', {'producto': producto})
+    return render(request, 'Producto/detalle_producto.html', {'producto': producto})
 
 
 
@@ -36,7 +36,7 @@ def crear_producto(request):
             return redirect('index')  # Redirige al usuario al index después de crear exitosamente un nuevo producto
     else:
         form = ProductoForm()
-    return render(request, 'crear_producto.html', {'form': form})
+    return render(request, 'Producto/crear_producto.html', {'form': form})
 
 def eliminar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
@@ -47,17 +47,15 @@ def eliminar_producto(request, pk):
     
 
 
-
-
 # LOGIN
 
-def mostrar_entrar(request):
+def mostrar_ingresar(request):
     if request.method == 'GET':
         contexto = {
             'titulo': 'Bienvenido',
             'formulario':FormularioEntrar()
         }
-        return render(request,'entrar.html',contexto)
+        return render(request,'Login/ingresar.html',contexto)
     if request.method == 'POST':
         datos_usuario = FormularioEntrar(data=request.POST)
         es_valido = datos_usuario.is_valid()
@@ -74,7 +72,7 @@ def mostrar_entrar(request):
             'formulario': datos_usuario
         }
         warning(request,'Usuario y contraseña incorrectos')
-        return render(request,'entrar.html',contexto)
+        return render(request,'Login/ingresar.html',contexto)
 
 def mostrar_registro(request):
     # Usamos el nuevo formulario para mostrar los elementos con clases
@@ -82,7 +80,7 @@ def mostrar_registro(request):
         contexto = {
             'formulario': FormularioRegistro()
         }
-        return render(request, 'registro.html', contexto)
+        return render(request, 'Login/registro.html', contexto)
     elif request.method == 'POST':
         formulario_usuario = FormularioRegistro(request.POST)
         es_valido = formulario_usuario.is_valid() # True Valido, False Invalido 
@@ -94,7 +92,7 @@ def mostrar_registro(request):
             'formulario': formulario_usuario
         }
         warning(request, 'Ups... complete los campos correctamente')
-        return render(request, 'registro.html', contexto)
+        return render(request, 'Login/registro.html', contexto)
 
 
         

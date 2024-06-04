@@ -1,0 +1,36 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+
+{% block title %}
+   GalaxyMusic | {{ producto.nombre }}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                {% if producto.foto %}
+                    <img src="{{ producto.foto.url }}" class="img-fluid" alt="{{ producto.nombre }}">
+                {% else %}
+                    <img src="{% static 'default.jpg' %}" class="img-fluid" alt="Imagen no disponible">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h1>{{ producto.nombre }}</h1>
+                <p>Código: {{ producto.codigo }}</p>
+                <p>{{ producto.descripcion }}</p>
+                <p>Stock: {{ producto.stock }}</p>
+                <h3>${{ producto.precio }}</h3>
+                <button type="button" class="btn btn-primary" onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}');">Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function agregarAlCarrito(nombre, precio) {
+            alert(`Producto: ${nombre}\nPrecio: $${precio}\n¡Agregado al carrito!`);
+        }
+    </script>
+{% endblock %}

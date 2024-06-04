@@ -1,0 +1,56 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | Registrar
+{% endblock %}
+
+{% block body %}
+<!-- Form -->
+<div class="container">
+  <div class="row justify-content-center">
+      <form method="POST">
+        {% csrf_token %}
+        <input type="checkbox" id="check">
+        <div class="login form">
+          <br>
+          <header class="loginheader">Registro</header>
+          <br>
+          <div class="form-floating">
+            {{ formulario.username.label }}
+            {{ formulario.username }}
+          </div>
+          <div class="form-floating">
+            {{ formulario.first_name.label }}
+            {{ formulario.first_name }}
+          </div>
+          <div class="form-floating">
+            {{ formulario.last_name.label }}
+            {{ formulario.last_name }}
+          </div>
+          <div class="form-floating">
+            {{ formulario.email.label }}
+            {{ formulario.email }}
+          </div>
+          <div class="form-floating">
+            {{ formulario.password1.label }}
+            {{ formulario.password1 }}
+          </div>
+          <div class="form-floating">
+            {{ formulario.password2.label }}
+            {{ formulario.password2 }}
+          </div>
+          <button class="w-100 btn btn-dark" type="submit">Registrar</button>
+          <div class="signup">
+            {% if user.is_anonymous %}
+            <span class="signup">¿Ya tienes una cuenta?
+                <a href="{% url 'mostrar_ingresar' %}">Inicia Sesión</a>
+            </span>
+            {% endif %}
+        </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
