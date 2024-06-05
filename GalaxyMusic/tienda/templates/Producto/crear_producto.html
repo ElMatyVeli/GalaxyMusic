@@ -5,11 +5,72 @@
 GalaxyMusic | Crear producto
 {% endblock %}
 
+{% block css %}
+<style>
+  /* Estilos para la tarjeta */
+  .card {
+    max-width: 500px;
+    background-color: #0e323d;
+    border: 2px solid #0b2932;
+    box-shadow: 0px 0px 20px 1px #092027;
+    border-radius: 1rem;
+    padding: 20px;
+    margin: auto; /* Para centrar la tarjeta horizontalmente */
+    margin-top: 50px; /* Espacio en la parte superior */
+  }
+
+  /* Estilos para el formulario dentro de la tarjeta */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea los elementos a la izquierda */
+    gap: 10px; /* Espacio entre elementos */
+  }
+
+  form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+    color: black; /* Cambia el color del texto dentro de los inputs a negro */
+  }
+
+  form input{
+    color: black;
+  }
+
+  form button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #0e323d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  form button{
+    background-color: #0b2932;
+  }
+
+  form button:hover{
+    background-color: #071d23;
+  }
+
+  h1 {
+    color: white; /* Cambia el color del texto del h1 a blanco */
+  }
+</style>
+{% endblock %}
+
 {% block body %}
-<h1>Crear Producto</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar Producto</button>
-    </form>
+<div class="card">
+  <h1>Crear Producto</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar Producto</button>
+  </form>
+</div>
 {% endblock %}
