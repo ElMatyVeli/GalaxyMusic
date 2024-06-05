@@ -64,6 +64,36 @@
                 color: var(--secondary-color);
             }
 
+            footer{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                background-color: var(--quaternary-color);
+                margin-top: 40px;
+            }
+
+            .about-us{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-top: 10px;
+            }
+
+            .about-us a, footer p{
+                text-decoration: none;
+                color: black;
+            }
+
+            .about-us a:hover{
+                scale: 1.05;
+                transition: all ease-in-out 0.5s;
+            }
+
     </style>
 
     </head>
@@ -75,6 +105,9 @@
         <!-- CONTENT -->
         {% block body %}
         {% endblock %}
+
+        <!-- FOOTER -->
+        {% include 'Base/footer.html' %}
 
         <!-- BOOTSTRAP JS -->
         <script
