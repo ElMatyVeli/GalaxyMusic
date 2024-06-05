@@ -1,0 +1,14 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | Error
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+</div>
+{% endblock %}

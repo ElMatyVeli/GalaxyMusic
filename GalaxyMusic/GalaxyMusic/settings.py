@@ -10,10 +10,43 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path,os
+from pathlib import Path, os
+import MySQLdb
+
+# Function to create the database if it does not exist
+def create_database_if_not_exists():
+    db_config = {
+        'NAME': 'GalaxyMusic1',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '35.202.240.176',
+        'PORT': '3306',
+    }
+    db_name = db_config['NAME']
+    db_user = db_config['USER']
+    db_password = db_config['PASSWORD']
+    db_host = db_config['HOST']
+    db_port = db_config['PORT']
+
+    try:
+        connection = MySQLdb.connect(
+            host=db_host,
+            user=db_user,
+            passwd=db_password,
+            port=int(db_port)
+        )
+        cursor = connection.cursor()
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+        cursor.close()
+        connection.close()
+        print(f"Database {db_name} created or already exists.")
+    except MySQLdb.Error as e:
+        print(f"Error creating database: {e}")
+
+# Call the function to create the database if it does not exist
+create_database_if_not_exists()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -38,7 +71,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tienda',
-
 ]
 
 MIDDLEWARE = [
@@ -87,7 +119,6 @@ DATABASES = {
 }
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -126,7 +157,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'imgs'),
+    os.path.join(BASE_DIR, 'imgs'),
 ]
 
 # Default primary key field type
