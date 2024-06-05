@@ -5,47 +5,109 @@
 GalaxyMusic | Registrar
 {% endblock %}
 
+{% block css %}
+<style>
+  div.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  div.row{
+    margin: 30px;
+  }
+
+  .form-input{
+    height: 20px;
+  }
+
+  .container-form{
+    width: 100%;
+  }
+
+  .form *{
+    width: 100%;
+  }
+
+  .loginheader{
+    text-align: center;
+    font-size: 3rem;
+  }
+
+  .container{
+    max-width: 500px;
+    background-color: #0e323d;
+    border: 2px solid #0b2932;
+    box-shadow: 0px 0px 20px 1px #092027;
+    border-radius: 4rem;
+  }
+
+  div.signup{
+    text-align: center;
+  }
+
+  span > a{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
+
 {% block body %}
 <!-- Form -->
 <div class="container">
   <div class="row justify-content-center">
-      <form method="POST">
+      <form method="POST" class="container-form">
         {% csrf_token %}
-        <input type="checkbox" id="check">
         <div class="login form">
           <br>
           <header class="loginheader">Registro</header>
           <br>
           <div class="form-floating">
             {{ formulario.username.label }}
+            <div class="form-input">
             {{ formulario.username }}
+          </div>
           </div>
           <div class="form-floating">
             {{ formulario.first_name.label }}
+            <div class="form-input">
             {{ formulario.first_name }}
+          </div>
           </div>
           <div class="form-floating">
             {{ formulario.last_name.label }}
+            <div class="form-input">
             {{ formulario.last_name }}
           </div>
+        </div>
           <div class="form-floating">
             {{ formulario.email.label }}
+            <div class="form-input">
             {{ formulario.email }}
           </div>
+        </div>
           <div class="form-floating">
             {{ formulario.password1.label }}
+            <div class="form-input">
             {{ formulario.password1 }}
           </div>
+        </div>
           <div class="form-floating">
             {{ formulario.password2.label }}
+            <div class="form-input">
             {{ formulario.password2 }}
           </div>
+        </div>
           <button class="w-100 btn btn-dark" type="submit">Registrar</button>
           <div class="signup">
             {% if user.is_anonymous %}
-            <span class="signup">¿Ya tienes una cuenta?
-                <a href="{% url 'mostrar_ingresar' %}">Inicia Sesión</a>
-            </span>
+            <span class="signup">¿Ya tienes una cuenta?</span>
+            <span><a href="{% url 'mostrar_ingresar' %}">Inicia Sesión</a></span>
             {% endif %}
         </div>
         </div>
