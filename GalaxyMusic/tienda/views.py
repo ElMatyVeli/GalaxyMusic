@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Producto
-from sweetify import success, warning
+import sweetify
+from sweetify import success,warning
 from .forms import ProductoForm, FormularioRegistro, FormularioEntrar
 from django.contrib.auth import authenticate, login, logout
 from django.db import DatabaseError
@@ -46,48 +47,39 @@ def eliminar_producto(request, pk):
 
 def mostrar_ingresar(request):
     if request.method == 'GET':
-        contexto = {
-            'titulo': 'Bienvenido',
-            'formulario': FormularioEntrar()
-        }
+        formulario = FormularioEntrar()
+        contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
         return render(request, 'Login/ingresar.html', contexto)
-    if request.method == 'POST':
-        datos_usuario = FormularioEntrar(data=request.POST)
-        es_valido = datos_usuario.is_valid()
-        if es_valido:
-            username = datos_usuario.cleaned_data['usuario']
-            password = datos_usuario.cleaned_data['contrasenia_usuario']
+    elif request.method == 'POST':
+        formulario = FormularioEntrar(data=request.POST)
+        if formulario.is_valid():
+            username = formulario.cleaned_data['usuario']
+            password = formulario.cleaned_data['contrasenia_usuario']
             usuario = authenticate(username=username, password=password)
             if usuario is not None:
                 login(request, usuario)
                 success(request, f'Bienvenido {usuario.username}')
                 return redirect('index')
-        contexto = {
-            'titulo': 'Bienvenido',
-            'formulario': datos_usuario
-        }
-        warning(request, 'Usuario y contraseña incorrectos')
+        warning(request, 'Usuario y/o contraseña incorrectos')
+        contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
         return render(request, 'Login/ingresar.html', contexto)
 
 def mostrar_registro(request):
-    # Usamos el nuevo formulario para mostrar los elementos con clases
     if request.method == 'GET':
-        contexto = {
-            'formulario': FormularioRegistro()
-        }
+        formulario = FormularioRegistro()
+        contexto = {'formulario': formulario}
         return render(request, 'Login/registro.html', contexto)
     elif request.method == 'POST':
         formulario_usuario = FormularioRegistro(request.POST)
-        es_valido = formulario_usuario.is_valid()  # True Valido, False Invalido 
-        if es_valido:
+        if formulario_usuario.is_valid():
             formulario_usuario.save()
             success(request, 'Bienvenido, gracias por registrarte')
-            return redirect('mostrar_entrar')
-        contexto = {
-            'formulario': formulario_usuario
-        }
-        warning(request, 'Ups... complete los campos correctamente')
-        return render(request, 'Login/registro.html', contexto)
+            return redirect('mostrar_ingresar')
+        else:
+            warning(request, 'Por favor, completa los campos correctamente.')
+            contexto = {'formulario': formulario_usuario}
+            return render(request, 'Login/registro.html', contexto)
+
 
 def cerrar_sesion(request):
     if request.user.is_authenticated:

@@ -13,36 +13,53 @@ from django.forms import (
     BooleanField,
     TextInput
 )
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
 class FormularioRegistro(UserCreationForm):
-    def __init__(self, *args,**kargs):
-        super().__init__(*args,**kargs)
-        # Le aplicamos las clases forzadamente a los campos
-        # password1 y password2
-        self.fields['password1'].widget.attrs = { 'class': 'form-control'}
-        self.fields['password2'].widget.attrs = { 'class': 'form-control'}
-    class Meta:
-        # Registramos este formulario para el modelo User
-        model = User
-        fields = [
-            'username',
-            'password1',
-            'password2',
-            'first_name',
-            'last_name',
-            'email'
-        ]
-        # Le reemplazamos los estilos por defecto a los campos del modelo Usuario
-        # completar los campos que faltan para poder terminar los estilos
-        widgets = {
-            'username': TextInput( attrs = { 'class' : 'form-control'} ),
-            'first_name': TextInput( attrs = { 'class' : 'form-control'} ),
-            'last_name': TextInput( attrs = { 'class' : 'form-control'} ),
-            'email': EmailInput( attrs = { 'class' : 'form-control'} ),
-        }
+    username = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Nombre de usuario',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    password1 = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    password2 = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Confirmar contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Nombre',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        label='Apellido',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    email = forms.EmailField(
+        max_length=254,
+        required=True,
+        label='Correo electrónico',
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
 
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'form-control'})
 class FormularioEntrar(Form):
     usuario = CharField(
         min_length=1,
