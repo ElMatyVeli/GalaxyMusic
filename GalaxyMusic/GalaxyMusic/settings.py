@@ -12,7 +12,15 @@ https://docs.djangoproject.com/es/5.0/ref/settings/
 
 from pathlib import Path
 import MySQLdb
+from django.contrib.messages import constants as messages
 
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
 # Función para crear la base de datos si no existe
 def create_database_if_not_exists():
     # Configuración de la base de datos

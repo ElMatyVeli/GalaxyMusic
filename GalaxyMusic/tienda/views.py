@@ -8,6 +8,7 @@ from django.db import DatabaseError
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 # VISTAS DE PÁGINAS
 
@@ -126,11 +127,13 @@ def mostrar_registro(request):
             # Redirige al usuario a la página de inicio de sesión después de registrarse
             return redirect('mostrar_ingresar')
         else:
+            for field, errors in formulario_usuario.errors.items():
+                for error in errors:
+                    messages.error(request, f"{formulario_usuario.fields[field].label}: {error}")
             warning(request, 'Por favor, completa los campos correctamente.')
             contexto = {'formulario': formulario_usuario}
             # Renderiza nuevamente la plantilla 'registro.html' si el formulario no es válido
             return render(request, 'Login/registro.html', contexto)
-
 # Vista para cerrar sesión del usuario
 def cerrar_sesion(request):
     if request.user.is_authenticated:
