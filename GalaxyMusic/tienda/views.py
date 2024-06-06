@@ -65,31 +65,51 @@ def eliminar_producto(request, pk):
 # LOGIN
 
 # Vista para mostrar y manejar el formulario de inicio de sesión
+
 @csrf_exempt
 def mostrar_ingresar(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
+    if request.method == 'GET':
+        formulario = FormularioEntrar()
+        contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
+        return render(request, 'Login/ingresar.html', contexto)
+    
+    elif request.method == 'POST':
+        if request.headers.get('Content-Type') == 'application/json':
+            data = json.loads(request.body)
+        else:
+            data = request.POST
+
         formulario = FormularioEntrar(data=data)
         if formulario.is_valid():
             username = formulario.cleaned_data['usuario']
             password = formulario.cleaned_data['contrasenia_usuario']
             usuario = authenticate(username=username, password=password)
             if usuario is not None:
-                # Inicia sesión del usuario
                 login(request, usuario)
-                return JsonResponse({'usuario': usuario.username, 'contrasenia_usuario': password})
+                if request.headers.get('Content-Type') == 'application/json':
+                    return JsonResponse({'usuario': usuario.username, 'contrasenia_usuario': password})
+                else:
+                    sweetify.success(request, f'Bienvenido {usuario.username}')
+                    return redirect('index')
             else:
-                return JsonResponse({'error': 'Usuario y/o contraseña incorrectos'}, status=400)
+                if request.headers.get('Content-Type') == 'application/json':
+                    return JsonResponse({'error': 'Usuario y/o contraseña incorrectos'}, status=400)
+                else:
+                    sweetify.warning(request, 'Usuario y/o contraseña incorrectos')
+                    contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
+                    return render(request, 'Login/ingresar.html', contexto)
         else:
-            return JsonResponse({'errors': formulario.errors}, status=400)
-    if request.method == 'GET':
-        formulario = FormularioEntrar()
-        contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
-        # Renderiza la plantilla 'ingresar.html' con el formulario de inicio de sesión
-        return render(request, 'Login/ingresar.html', contexto)
+            if request.headers.get('Content-Type') == 'application/json':
+                return JsonResponse({'errors': formulario.errors}, status=400)
+            else:
+                sweetify.warning(request, 'Por favor, complete los campos correctamente.')
+                contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
+                return render(request, 'Login/ingresar.html', contexto)
     else:
-        return JsonResponse({'error': 'Método HTTP no permitido'}, status=405)
-
+        if request.headers.get('Content-Type') == 'application/json':
+            return JsonResponse({'error': 'Método HTTP no permitido'}, status=405)
+        else:
+            return render(request, 'Login/ingresar.html', {'titulo': 'Bienvenido', 'formulario': FormularioEntrar()})
 # Vista para mostrar y manejar el formulario de registro de usuarios
 def mostrar_registro(request):
     if request.method == 'GET':
