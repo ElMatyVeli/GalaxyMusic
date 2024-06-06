@@ -7,7 +7,6 @@ GalaxyMusic | Crear producto
 
 {% block css %}
 <style>
-  /* Estilos para la tarjeta */
   .card {
     max-width: 500px;
     background-color: #0e323d;
@@ -15,16 +14,15 @@ GalaxyMusic | Crear producto
     box-shadow: 0px 0px 20px 1px #092027;
     border-radius: 1rem;
     padding: 20px;
-    margin: auto; /* Para centrar la tarjeta horizontalmente */
-    margin-top: 50px; /* Espacio en la parte superior */
+    margin: auto;
+    margin-top: 50px;
   }
 
-  /* Estilos para el formulario dentro de la tarjeta */
   form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alinea los elementos a la izquierda */
-    gap: 10px; /* Espacio entre elementos */
+    align-items: flex-start;
+    gap: 10px;
   }
 
   form input[type="text"] {
@@ -32,11 +30,11 @@ GalaxyMusic | Crear producto
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
-    color: black; /* Cambia el color del texto dentro de los inputs a negro */
+    box-sizing: border-box;
+    color: black;
   }
 
-  form input{
+  form input {
     color: black;
   }
 
@@ -50,16 +48,16 @@ GalaxyMusic | Crear producto
     cursor: pointer;
   }
 
-  form button{
+  form button {
     background-color: #0b2932;
   }
 
-  form button:hover{
+  form button:hover {
     background-color: #071d23;
   }
 
   h1 {
-    color: white; /* Cambia el color del texto del h1 a blanco */
+    color: white;
   }
 </style>
 {% endblock %}
@@ -67,6 +65,7 @@ GalaxyMusic | Crear producto
 {% block body %}
 <div class="card">
   <h1>Crear Producto</h1>
+  <!-- Formulario para crear un nuevo producto -->
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

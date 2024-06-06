@@ -7,6 +7,7 @@ GalaxyMusic | Productos
 
 {% block css %}
 <style>
+  /* Estilos para las cartas de productos */
   .card {
     width: 300px; /* Tamaño fijo para todas las cartas */
     margin-bottom: 20px;
@@ -20,13 +21,17 @@ GalaxyMusic | Productos
 
 {% block body %}
 <div class="container">
+  <!-- Encabezado -->
   <h1 class="mt-5 mb-4">Todos los Productos</h1>
+  <!-- Lista de productos -->
   <div class="row">
     {% for producto in productos %}
     <div class="col-md-4">
       <a href="{% url 'detalle_producto' producto.id %}">
+        <!-- Carta de producto -->
         <div class="card">
           {% if producto.foto %}
+          <!-- Imagen del producto -->
           <img
             src="{{ producto.foto.url }}"
             class="card-img-top"
@@ -39,12 +44,19 @@ GalaxyMusic | Productos
             alt="Imagen no disponible"
           />
           {% endif %}
+          <!-- Contenido de la carta -->
           <div class="card-body">
+            <!-- Nombre del producto -->
             <h5 class="card-title">{{ producto.nombre }}</h5>
+            <!-- Código del producto -->
             <p class="card-text">Código:{{ producto.codigo }}</p>
+            <!-- Precio del producto -->
             <p class="card-text">Precio: ${{ producto.precio }}</p>
+            <!-- Descripción del producto -->
             <p class="card-text">{{ producto.descripcion }}</p>
+            <!-- Stock del producto -->
             <p class="card-text">Stock:{{ producto.stock }}</p>
+            <!-- Botón de eliminar producto -->
             <div class="d-flex justify-content-end">
               <a
                 href="#"
@@ -66,10 +78,12 @@ GalaxyMusic | Productos
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function () {
+    // Función para manejar la eliminación de productos
     $(".eliminar-producto").click(function (e) {
       e.preventDefault();
       var productoId = $(this).data("producto-id");
 
+      // Confirmar la eliminación del producto
       if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
         $.ajax({
           url: "/producto/" + productoId + "/eliminar/", // URL para eliminar producto

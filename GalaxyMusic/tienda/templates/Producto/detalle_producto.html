@@ -9,6 +9,7 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
+                <!-- Mostrar la foto del producto si está disponible, de lo contrario, mostrar una imagen por defecto -->
                 {% if producto.foto %}
                     <img src="{{ producto.foto.url }}" class="img-fluid" alt="{{ producto.nombre }}">
                 {% else %}
@@ -16,11 +17,13 @@
                 {% endif %}
             </div>
             <div class="col-md-6">
+                <!-- Mostrar detalles del producto -->
                 <h1>{{ producto.nombre }}</h1>
                 <p>Código: {{ producto.codigo }}</p>
                 <p>{{ producto.descripcion }}</p>
                 <p>Stock: {{ producto.stock }}</p>
                 <h3>${{ producto.precio }}</h3>
+                <!-- Botón para agregar el producto al carrito -->
                 <button type="button" class="btn btn-primary" onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}');">Agregar al carrito</button>
             </div>
         </div>
@@ -29,6 +32,7 @@
 
 {% block js %}
     <script>
+        // Función para agregar el producto al carrito
         function agregarAlCarrito(nombre, precio) {
             alert(`Producto: ${nombre}\nPrecio: $${precio}\n¡Agregado al carrito!`);
         }

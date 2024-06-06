@@ -58,7 +58,7 @@ GalaxyMusic | Registrar
 {% endblock %}
 
 {% block body %}
-<!-- Form -->
+<!-- Formulario de registro -->
 <div class="container">
   <div class="row justify-content-center">
       <form method="POST" class="container-form">
@@ -67,43 +67,51 @@ GalaxyMusic | Registrar
           <br>
           <header class="loginheader">Registro</header>
           <br>
+          <!-- Campo de nombre de usuario -->
           <div class="form-floating">
             {{ formulario.username.label }}
             <div class="form-input">
             {{ formulario.username }}
           </div>
           </div>
+          <!-- Campo de nombre -->
           <div class="form-floating">
             {{ formulario.first_name.label }}
             <div class="form-input">
             {{ formulario.first_name }}
           </div>
           </div>
+          <!-- Campo de apellido -->
           <div class="form-floating">
             {{ formulario.last_name.label }}
             <div class="form-input">
             {{ formulario.last_name }}
           </div>
         </div>
+          <!-- Campo de correo electrónico -->
           <div class="form-floating">
             {{ formulario.email.label }}
             <div class="form-input">
             {{ formulario.email }}
           </div>
         </div>
+          <!-- Campo de contraseña -->
           <div class="form-floating">
             {{ formulario.password1.label }}
             <div class="form-input">
             {{ formulario.password1 }}
           </div>
         </div>
+          <!-- Campo de confirmación de contraseña -->
           <div class="form-floating">
             {{ formulario.password2.label }}
             <div class="form-input">
             {{ formulario.password2 }}
           </div>
         </div>
+          <!-- Botón de registro -->
           <button class="w-100 btn btn-dark" type="submit">Registrar</button>
+          <!-- Enlace para iniciar sesión -->
           <div class="signup">
             {% if user.is_anonymous %}
             <span class="signup">¿Ya tienes una cuenta?</span>
