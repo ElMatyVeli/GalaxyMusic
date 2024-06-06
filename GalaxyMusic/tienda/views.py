@@ -5,6 +5,8 @@ from sweetify import success,warning
 from .forms import ProductoForm, FormularioRegistro, FormularioEntrar
 from django.contrib.auth import authenticate, login, logout
 from django.db import DatabaseError
+from django.http import JsonResponse
+import json
 from django.views.decorators.csrf import csrf_exempt
 # VISTA DE PAGINAS
 
@@ -46,24 +48,27 @@ def eliminar_producto(request, pk):
 # LOGIN
 @csrf_exempt
 def mostrar_ingresar(request):
-    if request.method == 'GET':
-        formulario = FormularioEntrar()
-        contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
-        return render(request, 'Login/ingresar.html', contexto)
-    elif request.method == 'POST':
-        formulario = FormularioEntrar(data=request.POST)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        formulario = FormularioEntrar(data=data)
         if formulario.is_valid():
             username = formulario.cleaned_data['usuario']
             password = formulario.cleaned_data['contrasenia_usuario']
             usuario = authenticate(username=username, password=password)
             if usuario is not None:
                 login(request, usuario)
-                success(request, f'Bienvenido {usuario.username}')
-                return redirect('index')
-        warning(request, 'Usuario y/o contraseña incorrectos')
+                return JsonResponse({'usuario': usuario.username, 'contrasenia_usuario': password})
+            else:
+                return JsonResponse({'error': 'Usuario y/o contraseña incorrectos'}, status=400)
+        else:
+            return JsonResponse({'errors': formulario.errors}, status=400)
+    if request.method == 'GET':
+        formulario = FormularioEntrar()
         contexto = {'titulo': 'Bienvenido', 'formulario': formulario}
-        return render(request, 'Login/ingresar.html', contexto)
-
+        return render(request, 'Login/ingresar.html', contexto)    
+    else:
+        return JsonResponse({'error': 'Método HTTP no permitido'}, status=405)
+    
 def mostrar_registro(request):
     if request.method == 'GET':
         formulario = FormularioRegistro()
