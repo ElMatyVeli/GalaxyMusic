@@ -5,7 +5,7 @@ from sweetify import success,warning
 from .forms import ProductoForm, FormularioRegistro, FormularioEntrar
 from django.contrib.auth import authenticate, login, logout
 from django.db import DatabaseError
-
+from django.views.decorators.csrf import csrf_exempt
 # VISTA DE PAGINAS
 
 def index(request):
@@ -44,7 +44,7 @@ def eliminar_producto(request, pk):
         return redirect('productos')
 
 # LOGIN
-
+@csrf_exempt
 def mostrar_ingresar(request):
     if request.method == 'GET':
         formulario = FormularioEntrar()
