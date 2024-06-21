@@ -7,14 +7,15 @@ GalaxyMusic | Productos
 
 {% block css %}
 <style>
-  /* Estilos para las cartas de productos */
-  .card {
+ /* Estilos para las cartas de productos */
+ .card {
     width: 300px; /* Tamaño fijo para todas las cartas */
     margin-bottom: 20px;
   }
   .card img {
-    height: 200px; /* Altura fija para todas las imágenes */
-    object-fit: cover;
+    height: 100%; /* Altura del 100% para ocupar todo el espacio vertical */
+    width: 100%; /* Ancho del 100% para ocupar todo el espacio horizontal */
+    object-fit: cover; /* Ajusta la imagen para cubrir todo el espacio de la carta */
   }
 </style>
 {% endblock %}
@@ -24,52 +25,8 @@ GalaxyMusic | Productos
   <!-- Encabezado -->
   <h1 class="mt-5 mb-4">Todos los Productos</h1>
   <!-- Lista de productos -->
-  <div class="row">
-    {% for producto in productos %}
-    <div class="col-md-4">
-      <a href="{% url 'detalle_producto' producto.id %}">
-        <!-- Carta de producto -->
-        <div class="card">
-          {% if producto.foto %}
-          <!-- Imagen del producto -->
-          <img
-            src="{{ producto.foto.url }}"
-            class="card-img-top"
-            alt="{{ producto.nombre }}"
-          />
-          {% else %}
-          <img
-            src="{% static 'default.jpg' %}"
-            class="card-img-top"
-            alt="Imagen no disponible"
-          />
-          {% endif %}
-          <!-- Contenido de la carta -->
-          <div class="card-body">
-            <!-- Nombre del producto -->
-            <h5 class="card-title">{{ producto.nombre }}</h5>
-            <!-- Código del producto -->
-            <p class="card-text">Código:{{ producto.codigo }}</p>
-            <!-- Precio del producto -->
-            <p class="card-text">Precio: ${{ producto.precio }}</p>
-            <!-- Descripción del producto -->
-            <p class="card-text">{{ producto.descripcion }}</p>
-            <!-- Stock del producto -->
-            <p class="card-text">Stock:{{ producto.stock }}</p>
-            <!-- Botón de eliminar producto -->
-            <div class="d-flex justify-content-end">
-              <a
-                href="#"
-                class="btn btn-sm btn-danger eliminar-producto"
-                data-producto-id="{{ producto.id }}"
-                ><i class="fas fa-trash-alt"></i
-              ></a>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
-    {% endfor %}
+  <div class="row" id="productos">
+    <!-- Las cartas de productos se insertarán aquí dinámicamente -->
   </div>
 </div>
 {% endblock %}
@@ -78,30 +35,68 @@ GalaxyMusic | Productos
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function () {
-    // Función para manejar la eliminación de productos
-    $(".eliminar-producto").click(function (e) {
-      e.preventDefault();
-      var productoId = $(this).data("producto-id");
-
-      // Confirmar la eliminación del producto
-      if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-        $.ajax({
-          url: "/producto/" + productoId + "/eliminar/", // URL para eliminar producto
-          type: "POST",
-          data: {
-            csrfmiddlewaretoken: "{{ csrf_token }}", // Asegúrate de enviar el token CSRF
-          },
-          success: function (response) {
-            // Recargar la página después de la eliminación del producto
-            location.reload();
-          },
-          error: function (xhr, errmsg, err) {
-            // Maneja el error, si lo hay
-            console.log(xhr.status + ": " + xhr.responseText);
-          },
+    // Función para cargar los productos desde el json-server
+    fetch('http://localhost:4000/productos')
+      .then(response => response.json())
+      .then(productos => {
+        const contenedor = document.getElementById('productos');
+        productos.forEach(producto => {
+          const cardHtml = `
+            <div class="col-md-4">
+              <a href="#">
+                <!-- Carta de producto -->
+                <div class="card">
+                  <img
+                    src="${producto.imagen}"
+                    class="card-img-top"
+                    alt="${producto.nombre_producto}"
+                  />
+                  <!-- Contenido de la carta -->
+                  <div class="card-body">
+                    <!-- Nombre del producto -->
+                    <h5 class="card-title">${producto.nombre_producto}</h5>
+                    <!-- Precio del producto -->
+                    <p class="card-text">Precio: $${producto.precio}</p>
+                    <!-- Descripción del producto -->
+                    <p class="card-text">${producto.descripcion}</p>
+                    <!-- Botón de eliminar producto -->
+                    <div class="d-flex justify-content-end">
+                      <a
+                        href="#"
+                        class="btn btn-sm btn-danger eliminar-producto"
+                        data-producto-id="${producto.id_producto}"
+                        ><i class="fas fa-trash-alt"></i
+                      ></a>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+          contenedor.innerHTML += cardHtml;
         });
-      }
+
+        // Función para manejar la eliminación de productos
+        $(".eliminar-producto").click(function (e) {
+          e.preventDefault();
+          var productoId = $(this).data("producto-id");
+
+          // Confirmar la eliminación del producto
+          if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+            fetch('http://localhost:4000/productos/' + productoId, {
+              method: 'DELETE',
+            })
+            .then(response => {
+              if (response.ok) {
+                location.reload();
+              } else {
+                console.log("Error al eliminar el producto");
+              }
+            });
+          }
+        });
+      })
+      .catch(error => console.error('Error:', error));
     });
-  });
 </script>
 {% endblock %}

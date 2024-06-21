@@ -1,0 +1,29 @@
+{
+    "productos": [
+      {
+        "id_producto": 1,
+        "nombre_producto": "Guitarra eléctrica Gibson Les Paul Studio",
+        "imagen": "https://audiomusicacl.vtexassets.com/arquivos/ids/179589-1200-auto?v=637992936293770000&width=1200&height=auto&aspect=true",
+        "descripcion": "La Gibson Les Paul Studio es celebrado por artistas en vivo y músicos de sesión por igual, cubre un espacio sónico aún más amplio, con sus pastillas humbucking 490R/498T con bobina roscada.",
+        "precio": 2119900,
+        "id_categoria": 1
+      },
+      {
+        "id_producto": 2,
+        "nombre_producto": "Bajo eléctrico Ibanez IJSR190U",
+        "imagen": "https://audiomusicacl.vtexassets.com/arquivos/ids/167436-1200-auto?v=637801427871700000&width=1200&height=auto&aspect=true",
+        "descripcion": "Diseñado para el bajista que quiere comenzar con la mejor forma de aprendizaje de este instrumento. Incluye todos los elementos y accesorios necesarios para transportar y tocar en donde tu quieras",
+        "precio": 349990,
+        "id_categoria": 2
+      },
+      {
+        "id_producto": 3,
+        "nombre_producto": "Guitarra eléctrica LTD EC256",
+        "imagen": "https://audiomusicacl.vtexassets.com/arquivos/ids/176173-1200-auto?v=637844488524300000&width=1200&height=auto&aspect=true",
+        "descripcion": "Las guitarras EC se corresponden a los modelos Eclipse de ESP. Aquí se encuentran, a diferencia del venerable original, un Shaping en el dorso y un Cutaway generoso, así como los típicos Flag Inlays y cápsulas ESP Designed LH-150B, cápsula cuello ESP Designed LH-150N. Fabricada en caoba, 22 trastes.",
+        "precio": 549900,
+        "id_categoria": 3
+      }
+    ]
+  }
+  
