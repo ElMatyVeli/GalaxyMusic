@@ -129,11 +129,11 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': 'GalaxyMusic1',  # Nombre de tu base de datos en MySQL
+        'USER': 'crisgaete32',   # Tu nombre de usuario en PythonAnywhere
+        'PASSWORD': '45rjwhe8',  # Contraseña de tu base de datos en MySQL
+        'HOST': 'crisgaete32.mysql.pythonanywhere-services.com',  # Hostname de tu base de datos en PythonAnywhere
+        'PORT': '3306',  # Puerto predeterminado de MySQL
     }
 }
 
