@@ -22,42 +22,42 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 # Función para crear la base de datos si no existe
-def create_database_if_not_exists():
+#def create_database_if_not_exists():
     # Configuración de la base de datos
-    db_config = {
-        'NAME': 'GalaxyMusic1',  # Nombre de la base de datos
-        'USER': 'root',           # Usuario de la base de datos
-        'PASSWORD': '123456',     # Contraseña de la base de datos
-        'HOST': '35.202.240.176', # Host de la base de datos
-        'PORT': '3306',           # Puerto de la base de datos
-    }
-    db_name = db_config['NAME']
-    db_user = db_config['USER']
-    db_password = db_config['PASSWORD']
-    db_host = db_config['HOST']
-    db_port = db_config['PORT']
+   # db_config = {
+    #    'NAME': 'GalaxyMusic1',  # Nombre de la base de datos
+     #   'USER': 'root',           # Usuario de la base de datos
+      #  'PASSWORD': '123456',     # Contraseña de la base de datos
+       # 'HOST': '35.202.240.176', # Host de la base de datos
+       # 'PORT': '3306',           # Puerto de la base de datos
+    #}
+    #db_name = db_config['NAME']
+    #db_user = db_config['USER']
+    #db_password = db_config['PASSWORD']
+    #db_host = db_config['HOST']
+    #db_port = db_config['PORT']
 
-    try:
+    #try:
         # Establecer conexión con la base de datos
-        connection = MySQLdb.connect(
-            host=db_host,
-            user=db_user,
-            passwd=db_password,
-            port=int(db_port)
-        )
-        cursor = connection.cursor()
+     #   connection = MySQLdb.connect(
+      #      host=db_host,
+       #     user=db_user,
+        #    passwd=db_password,
+         #   port=int(db_port)
+       # )
+        #cursor = connection.cursor()
         # Crear la base de datos si no existe
-        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
-        cursor.close()
-        connection.close()
+        #cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+        #cursor.close()
+        #connection.close()
         # Imprimir un mensaje indicando que la base de datos ha sido creada o ya existe
-        print(f"Base de datos {db_name} creada o ya existente.")
-    except MySQLdb.Error as e:
+        #print(f"Base de datos {db_name} creada o ya existente.")
+    #except MySQLdb.Error as e:
         # Manejar cualquier error que ocurra durante la creación de la base de datos
-        print(f"Error al crear la base de datos: {e}")
+     #   print(f"Error al crear la base de datos: {e}")
 
 # Llama a la función para crear la base de datos si no existe
-create_database_if_not_exists()
+#create_database_if_not_exists()
 
 # Construye las rutas dentro del proyecto de esta manera: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,13 +129,14 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'GalaxyMusic1',  # Nombre de tu base de datos en MySQL
-        'USER': 'crisgaete32',   # Tu nombre de usuario en PythonAnywhere
-        'PASSWORD': '45rjwhe8',  # Contraseña de tu base de datos en MySQL
-        'HOST': 'crisgaete32.mysql.pythonanywhere-services.com',  # Hostname de tu base de datos en PythonAnywhere
-        'PORT': '3306',  # Puerto predeterminado de MySQL
+        'NAME': 'GalaxyMusic1',  # Nombre de tu base de datos
+        'USER': 'crisgaete32',   # Nombre de usuario de MySQL
+        'PASSWORD': '45rjwhe8',  # Contraseña del usuario de MySQL
+        'HOST': 'crisgaete32.mysql.pythonanywhere-services.com',  # Host de MySQL en PythonAnywhere
+        'PORT': '3306',  # Puerto por defecto de MySQL
     }
 }
+
 
 # Validación de contraseñas
 # https://docs.djangoproject.com/es/5.0/ref/settings/#auth-password-validators
