@@ -69,9 +69,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%+17wv$a5d)=rr@+r!j9!_h^wb--0k^jykw+hsd_ce$f778=md'
 
 # ¡ADVERTENCIA DE SEGURIDAD! No ejecutes con debug activado en producción.
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['crisgaete32.pythonanywhere.com']
 
 
 # Definición de aplicaciones instaladas
@@ -124,17 +124,18 @@ WSGI_APPLICATION = 'GalaxyMusic.wsgi.application'
 # Base de datos
 # https://docs.djangoproject.com/es/5.0/ref/settings/#databases
 
+import os
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'GalaxyMusic1',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '35.202.240.176',
-        'PORT': '3306',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
-
 
 # Validación de contraseñas
 # https://docs.djangoproject.com/es/5.0/ref/settings/#auth-password-validators
