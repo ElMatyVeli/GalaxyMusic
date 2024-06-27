@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | {{ producto.nombre }}
+{% endblock %}
+
+{% block css %}
+<style>
+  .portfolio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+  .portfolio img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  .portfolio .btn-group {
+    margin-top: 15px;
+  }
+  @media (max-width: 768px) {
+    .portfolio {
+      padding: 15px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<section class="portfolio" id="portfolio">
+  <h2>{{ producto.nombre }}</h2>
+  <div class="card">
+    <img src="{{ producto.foto_url }}" alt="{{ producto.nombre }}"/>
+    <h3>{{ producto.nombre }}</h3>
+    <p>Precio: ${{ producto.precio }}</p>
+    <p>Descripción: {{ producto.descripcion }}</p>
+    <div class="btn-group d-flex justify-content-between align-items-center">
+      <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-sm btn-outline-secondary">Agregar al carrito</a>
+    </div>
+  </div>
+  <a href="{% url 'productos' %}" class="btn btn-link mt-3">Volver a productos</a>
+</section>
+{% endblock %}

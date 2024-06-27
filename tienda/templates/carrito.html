@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | Carrito
+{% endblock %}
+
+{% block css %}
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .btn {
+    margin-top: 5px;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1 class="mt-5 mb-4">Carrito de Compras</h1>
+  {% if items_carrito %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items_carrito %}
+            <tr>
+              <td>{{ item.producto.nombre }}</td>
+              <td>{{ item.producto.precio }}</td>
+              <td>
+                <form method="post" action="{% url 'actualizar_cantidad' item.id %}">
+                  {% csrf_token %}
+                  <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control">
+                  <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+                </form>
+              </td>
+              <td>{{ item.total|floatformat:2 }}</td>
+              <td>
+                <form method="post" action="{% url 'eliminar_del_carrito' item.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3">
+      <a href="{% url 'realizar_pago' %}" class="btn btn-success">Realizar Pago</a>
+    </div>
+  {% else %}
+    <p>No hay productos en el carrito.</p>
+  {% endif %}
+</div>
+{% endblock %}

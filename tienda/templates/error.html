@@ -1,0 +1,13 @@
+{% extends 'Base/base.html' %}
+
+{% block title %}
+GalaxyMusic | Error
+{% endblock %}
+
+{% block body %}
+<section class="portfolio" id="portfolio">
+    <h2>Error</h2>
+    <p>{{ message }}</p>
+    <a href="{% url 'index' %}">Volver al inicio</a>
+</section>
+{% endblock %}

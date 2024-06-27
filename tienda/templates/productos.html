@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | Productos
+{% endblock %}
+
+{% block css %}
+<style>
+  .card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .card img {
+    height: 200px;
+    width: 100%;
+    object-fit: contain;
+  }
+  @media (min-width: 768px) {
+    .card {
+      width: 48%;
+    }
+  }
+  @media (min-width: 992px) {
+    .card {
+      width: 32%;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1 class="mt-5 mb-4">Todos los Productos</h1>
+  <div class="d-flex flex-wrap justify-content-between" id="productos">
+    {% for producto in productos %}
+      <div class="card">
+        <a href="{% url 'detalle_producto' producto.id %}" class="text-decoration-none">
+          <img src="{{ producto.foto_url }}" class="card-img-top" alt="{{ producto.nombre }}" />
+          <div class="card-body">
+            <h5 class="card-title">{{ producto.nombre }}</h5>
+            <p class="card-text">Precio: ${{ producto.precio }}</p>
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-sm btn-primary"><i class="fas fa-cart-plus"></i> Agregar al Carrito</a>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

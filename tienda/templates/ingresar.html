@@ -1,0 +1,124 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+GalaxyMusic | Ingresar
+{% endblock %}
+
+{% block css %}
+<style>
+  /* CSS styles for login form */
+  div.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  div.row {
+    margin: 30px;
+  }
+
+  .form-input {
+    height: 20px;
+  }
+
+  .container-form {
+    width: 100%;
+  }
+
+  .form * {
+    width: 100%;
+  }
+
+  .loginheader {
+    text-align: center;
+    font-size: 3rem;
+  }
+
+  .container {
+    max-width: 500px;
+    background-color: #0e323d;
+    border: 2px solid #0b2932;
+    box-shadow: 0px 0px 20px 1px #092027;
+    border-radius: 4rem;
+    padding: 2rem;
+  }
+
+  div.signup {
+    text-align: center;
+  }
+
+  span > a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+
+  .alert {
+    color: red;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="row justify-content-center">
+    <form method="POST" class="container-form">
+      {% csrf_token %}
+      <div class="login form">
+        <header class="loginheader">Ingresar</header>
+
+        <!-- Display messages -->
+        {% if messages %}
+        <div>
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Display error messages -->
+        {% if formulario.errors %}
+        <div class="alert alert-danger">
+          <ul>
+            {% for field, errors in formulario.errors.items %}
+              {% for error in errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- Username field -->
+        <div class="form-group">
+          {{ formulario.username.label_tag }}
+          <div class="form-input">
+            {{ formulario.username }}
+          </div>
+        </div>
+
+        <!-- Password field -->
+        <div class="form-group">
+          {{ formulario.password.label_tag }}
+          <div class="form-input">
+            {{ formulario.password }}
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button class="w-100 btn btn-dark" type="submit">Ingresar</button>
+
+        <!-- Registration link -->
+        <div class="signup">
+          <span class="signup">¿No tienes una cuenta?</span>
+          <span><a href="{% url 'mostrar_registro' %}">Regístrate</a></span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
