@@ -8,12 +8,14 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import firebase_admin
+from datetime import datetime
 from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Inicialización de Firebase Admin SDK con la credencial descargada
 cred = credentials.Certificate('tienda\galaxymusic.json')
 firebase_admin.initialize_app(cred)
+
 
 # Función para obtener productos desde Firestore y actualizar en la base de datos local
 def obtener_productos_desde_firestore():
@@ -41,6 +43,7 @@ def obtener_productos_desde_firestore():
         productos.append(producto)
 
     return productos
+
 
 # Vista principal del sitio web con productos obtenidos desde Firestore
 def index(request):
@@ -79,12 +82,12 @@ def carrito(request):
     }
     return render(request, 'carrito.html', context)
 
+import logging
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import ItemCarrito, Producto
-from .forms import FormularioPago
-from datetime import datetime
+# Configura el logger
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 def realizar_pago(request):
     if not request.user.is_authenticated:
@@ -92,6 +95,10 @@ def realizar_pago(request):
         return redirect('mostrar_ingresar')
 
     items_carrito = ItemCarrito.objects.filter(usuario=request.user)
+    for item in items_carrito:
+            if item.cantidad > item.producto.stock:
+                messages.error(request, f"No hay suficiente stock disponible para '{item.producto.nombre}'. Por favor, actualiza la cantidad en tu carrito.")
+                return redirect('carrito')
     total = sum(item.producto.precio * item.cantidad for item in items_carrito)
     boleta = None
 
@@ -105,14 +112,39 @@ def realizar_pago(request):
                 'items': [{
                     'codigo': item.producto.codigo,
                     'producto': item.producto,
-                    'cantidad': item.cantidad,
-                    'descuento': 0  # Puedes agregar lógica para calcular descuentos si es necesario
+                    'cantidad': item.cantidad
                 } for item in items_para_boleta],
                 'total': total,
                 'mensaje': 'Pago realizado exitosamente',
                 'fecha_emision': datetime.now().strftime('%d/%m/%Y')
             }
-            items_carrito.delete()
+
+            # Inicializa Firestore
+            db = firestore.client()
+            errores = []
+
+            # Actualizar el stock en Firestore por nombre del producto
+            for item in items_para_boleta:
+                try:
+                    # Consultar el producto por nombre
+                    producto_ref = db.collection('productos').where('nombre', '==', item.producto.nombre).limit(1).stream()
+                    for doc in producto_ref:
+                        # Actualizar el stock
+                        nuevo_stock = doc.to_dict()['stock'] - item.cantidad
+                        if nuevo_stock < 0:
+                            errores.append(f'Stock insuficiente para {item.producto.nombre}')
+                        else:
+                            doc.reference.update({'stock': nuevo_stock})
+                except Exception as e:
+                    errores.append(f'Error al actualizar el stock para {item.producto.nombre}: {str(e)}')
+
+            if errores:
+                for error in errores:
+                    messages.error(request, error)
+            else:
+                items_carrito.delete()
+                messages.success(request, 'Pago realizado exitosamente')
+
     else:
         formulario_pago = FormularioPago()
 
@@ -123,6 +155,7 @@ def realizar_pago(request):
         'total': total
     }
     return render(request, 'pago.html', contexto)
+
 
 
 def agregar_al_carrito(request, producto_id):

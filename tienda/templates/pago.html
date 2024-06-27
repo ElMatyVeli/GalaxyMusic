@@ -3,99 +3,74 @@
 
 {% block css %}
 <style>
-.boleta-container {
-  max-width: 30% !important; /* Máximo 35% del ancho de la pantalla */
-  background-color: #fff !important; /* Fondo blanco */
-  border: 2px solid #000 !important; /* Borde sólido negro */
-  border-radius: 5px !important; /* Borde redondeado */
-  padding: 20px !important; /* Relleno interno */
-  margin: 20px auto !important; /* Margen superior e inferior automático, centrado horizontalmente */
-}
+  .boleta-container {
+    max-width: 100%; /* Ancho máximo ajustado */
+    background-color: #fff; /* Fondo blanco */
+    border: 2px solid #000; /* Borde sólido negro */
+    border-radius: 5px; /* Borde redondeado */
+    padding: 20px; /* Relleno interno */
+    margin: 20px auto; /* Margen superior e inferior automático, centrado horizontalmente */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra ligera */
+  }
 
-.boleta {
-  margin: 0 !important; /* Eliminar margen de la boleta interna */
-}
-
-.boleta h3, .boleta h4 {
-  font-weight: bold !important; /* Texto negrita */
-  text-transform: uppercase !important; /* Texto en mayúsculas */
-  color: black !important; /* Color de texto negro */
-}
-
-.boleta p {
-  margin: 0 !important; /* Eliminar margen de los párrafos */
-  font-size: 1em !important; /* Tamaño de fuente normal */
-  color: black !important; /* Color de texto negro */
-}
-
-.boleta hr {
-  border: 1px dashed #000 !important; /* Línea punteada negra */
-}
-
-.boleta .table {
-  margin-bottom: 10px !important; /* Margen inferior de la tabla */
-  width: 100% !important; /* Ancho completo */
-}
-
-.boleta .table thead th {
-  border-bottom: 2px solid #000 !important; /* Borde inferior sólido */
-  text-align: center !important; /* Alineación centrada */
-  color: black !important; /* Color de texto negro */
-}
-
-.boleta .table tbody tr td {
-  text-align: right !important; /* Alineación derecha */
-  color: black !important; /* Color de texto negro */
-}
-
-.boleta .text-right {
-  text-align: right !important; /* Alineación derecha para elementos de texto */
-  color: black !important; /* Color de texto negro */
-}
-
-/* Ajustes para las secciones específicas */
-.boleta .details {
-  width: 30% !important; /* Ancho del 30% para la sección de detalles */
-}
-
-.boleta .details p {
-  margin: 0 !important; /* Eliminar margen de los párrafos */
-  font-size: 1em !important; /* Tamaño de fuente normal */
-  color: black !important; /* Color de texto negro */
-}
-
-@media (max-width: 576px) {
   .boleta {
-    padding: 10px !important; /* Reducción del relleno en pantallas pequeñas */
+    margin: 0;
   }
 
-  .boleta p,
+  .boleta h3, .boleta h4 {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: black;
+  }
+
+  .boleta p {
+    margin: 0;
+    font-size: 1em;
+    color: black;
+  }
+
+  .boleta hr {
+    border: 1px dashed #000;
+    margin: 10px 0;
+  }
+
+  .boleta .table {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .boleta .table thead th {
+    border-bottom: 2px solid #000;
+    text-align: center;
+    color: black;
+  }
+
+  .boleta .table tbody tr td {
+    text-align: right;
+    color: black;
+  }
+
   .boleta .text-right {
-    font-size: 0.9em !important; /* Tamaño de fuente reducido */
-    color: black !important; /* Color de texto negro */
-  }
-
-  .boleta h3,
-  .boleta h4 {
-    font-size: 1em !important; /* Tamaño de fuente normal para títulos */
-    color: black !important; /* Color de texto negro */
+    text-align: right;
+    color: black;
   }
 
   .boleta .details {
-    width: 100% !important; /* Ancho completo para detalles en pantallas pequeñas */
+    width: 100%;
   }
-  .boleta strong {
-    font-weight: bold !important; /* Texto en negrita */
-    color: black !important; /* Color de texto negro */
+
+  @media (min-width: 768px) {
+    .boleta-container {
+      max-width: 70%;
+    }
   }
-}
 </style>
-
-
 {% endblock %}
+
 {% block title %}
 GalaxyMusic | Pago
 {% endblock %}
+
 {% block body %}
 <div class="container">
   <h1 class="mt-5 mb-4">Realizar Pago</h1>
@@ -107,15 +82,15 @@ GalaxyMusic | Pago
         <p><strong>DIRECCIÓN:</strong> Freire 862, 8071189 San Bernardo, Región Metropolitana</p>
         <p><strong>GIRO:</strong> GalaxyMusic</p>
         <p><strong>TELÉFONO:</strong> 987231921</p>
-        <h4 class="text-center">BOLETA ELECTRONICA N° 1</h4>
+        <h4 class="text-center">BOLETA ELECTRÓNICA N° 1</h4>
         <p class="text-center">S.I.I. VALPARAISO</p>
         <p class="text-center">FECHA EMISIÓN: {{ boleta.fecha_emision }}</p>
-        <p><strong>Medio de Pago:</strong> Debito</p>
+        <p><strong>Medio de Pago:</strong> Débito</p>
         <hr>
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>CODIGO</th>
+              <th>CÓDIGO</th>
               <th>DESCRIPCIÓN</th>
               <th>VALOR</th>
               <th>DESC.</th>

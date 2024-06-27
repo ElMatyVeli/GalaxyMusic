@@ -7,15 +7,73 @@ GalaxyMusic | Inicio
 
 {% block css %}
 <style>
-  .carousel-item img { width: 100%; height: 450px !important; object-fit: cover !important; }
-  .carousel { margin-top: -3rem; }
-  .carousel-control-prev-icon, .carousel-control-next-icon { background-color: black; }
-  .portfolio { padding: 2rem 2rem; }
-  .cards { display: flex; flex-wrap: wrap; list-style: none; padding: 0; }
-  .card { flex: 1 1 calc(33.333% - 1rem); margin: 0.5rem; border: 1px solid #ddd; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
-  .card img { width: 100%; height: auto; object-fit: cover; }
-  .btn-agregar { margin-top: 0.5rem; }
-  .product-img { object-fit: contain; }
+  .carousel-item img {
+    width: 100%;
+    height: 450px !important;
+    object-fit: cover !important;
+  }
+
+  .carousel {
+    margin-top: -3rem;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: black;
+  }
+
+  .portfolio {
+    padding: 2rem 1rem; /* Reducción del padding para mejor ajuste */
+  }
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem; /* Margen negativo para compensar el margin de las cartas */
+  }
+
+  .card {
+    width: 100%; /* Ancho completo en pantallas pequeñas */
+    margin: 1rem;
+  }
+
+  .card img {
+    height: 200px; /* Altura fija para las imágenes */
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .btn-agregar {
+    margin-top: 0.5rem;
+  }
+
+  .product-img {
+    object-fit: contain;
+  }
+
+  @media (min-width: 576px) {
+    .card {
+      width: calc(50% - 1rem); /* Dos cartas por fila en pantallas medianas */
+    }
+  }
+
+  @media (min-width: 768px) {
+    .card {
+      width: calc(33.333% - 1rem); /* Tres cartas por fila en pantallas grandes */
+    }
+  }
+
+  @media (min-width: 992px) {
+    .card {
+      width: calc(25% - 1rem); /* Cuatro cartas por fila en pantallas extra grandes */
+    }
+  }
 </style>
 {% endblock %}
 
@@ -47,11 +105,13 @@ GalaxyMusic | Inicio
     <li class="card">
       <a href="{% url 'detalle_producto' producto.id %}">
         <img src="{{ producto.foto_url }}" alt="Imagen no disponible" class="product-img"/>
-        <h3>{{ producto.nombre }}</h3>
-        <p>${{ producto.precio }}</p>
+        <div class="card-body">
+          <h3>{{ producto.nombre }}</h3>
+          <p>${{ producto.precio }}</p>
+        </div>
       </a>
       <div class="btn-group d-flex justify-content-between align-items-center">
-        <button type="button" class="btn-agregar btn btn-sm btn-outline-secondary" onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}', '{% static 'default.jpg' %}');">
+        <button type="button" class="btn-agregar btn btn-sm btn-outline-secondary" onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}');">
           Agregar al carrito
         </button>
       </div>
@@ -59,15 +119,4 @@ GalaxyMusic | Inicio
     {% endfor %}
   </ul>
 </section>
-{% endblock %}
-
-
-
-{% block js %}
-<script>
-  // Función para agregar un producto al carrito y mostrar un mensaje de alerta
-  function agregarAlCarrito(nombre, precio, fotoUrl) {
-    alert(`Producto: ${nombre}\nPrecio: $${precio}\n¡Agregado al carrito!\nImagen: ${fotoUrl}`);
-  }
-</script>
 {% endblock %}
