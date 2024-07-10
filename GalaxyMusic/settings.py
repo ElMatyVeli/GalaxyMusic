@@ -209,9 +209,16 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Tipo de campo de clave primaria predeterminado
 # https://docs.djangoproject.com/es/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP de Gmail
+EMAIL_PORT = 587  # Puerto de Gmail para TLS
+EMAIL_USE_TLS = True  # Usar TLS (True) para conexión segura
+EMAIL_HOST_USER = 'galaxymusic2024@gmail.com'  # Correo electrónico desde el que se enviarán los correos
+EMAIL_HOST_PASSWORD = 'ionihkbmrriahbat'  # Contraseña del correo electrónico

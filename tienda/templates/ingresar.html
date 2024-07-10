@@ -15,6 +15,7 @@ GalaxyMusic | Ingresar
     justify-content: center;
     gap: 2rem;
     width: 100%;
+    margin-top: 20vh; /* Ajuste para centrar verticalmente */
   }
 
   div.row {
@@ -23,6 +24,7 @@ GalaxyMusic | Ingresar
 
   .form-input {
     height: 20px;
+    position: relative;
   }
 
   .container-form {
@@ -60,6 +62,25 @@ GalaxyMusic | Ingresar
   .alert {
     color: red;
   }
+
+  /* Adjusted toggle-password button */
+  .toggle-password {
+    margin-top: 10px; /* Espacio arriba del botón */
+    margin-left: 25%;
+    width: 50%; /* Ancho del botón al 50% del contenedor */
+    cursor: pointer;
+    padding: 8px; /* Ajuste de padding para tamaño adecuado */
+    border: none; /* Sin borde */
+  }
+
+  .toggle-password i {
+    font-size: 16px; /* Tamaño del icono */
+    color: #ccc; /* Color del icono */
+  }
+
+  .toggle-password:hover i {
+    color: #007bff; /* Color del icono al pasar el cursor */
+  }
 </style>
 {% endblock %}
 
@@ -70,16 +91,16 @@ GalaxyMusic | Ingresar
       {% csrf_token %}
       <div class="login form">
         <header class="loginheader">Ingresar</header>
-
-        <!-- Display messages -->
-        {% if messages %}
-        <div>
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-        {% endif %}
-
+        
+      {% if messages %}
+         <ul class="messages">
+            {% for message in messages %}
+            {% if 'autenticado' in message.tags %}
+              <li class="success">{{ message }}</li>
+            {% endif %}
+            {% endfor %}
+         </ul>
+      {% endif %}
         <!-- Display error messages -->
         {% if formulario.errors %}
         <div class="alert alert-danger">
@@ -109,6 +130,13 @@ GalaxyMusic | Ingresar
           </div>
         </div>
 
+        <!-- Toggle password visibility button -->
+        <div class="form-group">
+          <button type="button" class="toggle-password btn btn-dark" onclick="togglePasswordVisibility()">
+            <i class="fas fa-eye"></i> Mostrar/Ocultar Contraseña
+          </button>
+        </div>
+
         <!-- Submit button -->
         <button class="w-100 btn btn-dark" type="submit">Ingresar</button>
 
@@ -121,4 +149,22 @@ GalaxyMusic | Ingresar
     </form>
   </div>
 </div>
+
+<!-- JavaScript to toggle password visibility -->
+<script>
+  function togglePasswordVisibility() {
+    var passwordField = document.getElementById('id_password'); // Ajustar el ID según tu formulario
+    var toggleIcon = document.querySelector('.toggle-password i');
+
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleIcon.classList.remove('fa-eye');
+      toggleIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordField.type = 'password';
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+  }
+</script>
 {% endblock %}

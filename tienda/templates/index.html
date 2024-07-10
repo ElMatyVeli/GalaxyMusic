@@ -7,6 +7,25 @@ GalaxyMusic | Inicio
 
 {% block css %}
 <style>
+    .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    border-radius: 10px;
+    color: white;
+    z-index: 1000;
+  }
+    .popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    cursor: pointer;
+  }
   .carousel-item img {
     width: 100%;
     height: 450px !important;
@@ -119,4 +138,32 @@ GalaxyMusic | Inicio
     {% endfor %}
   </ul>
 </section>
+<!-- Pop-up de felicitaciones -->
+<div class="popup" id="popup-descuento" style="display: none;">
+  <span class="popup-close" onclick="cerrarPopup()">&times;</span>
+  <h3>Felicidades, ganaste un código de descuento del 30%!</h3>
+  <p>Utiliza el código <strong>"INVIERNO2024"</strong> al realizar tu compra para aplicar el descuento.</p>
+</div>
+
+<!-- Script para mostrar el pop-up solo una vez -->
+<script>
+  // Función para verificar si el pop-up ya se ha mostrado
+  function checkPopup() {
+    const popupShown = localStorage.getItem('popupShown');
+    if (!popupShown) {
+      // Muestra el pop-up si no se ha mostrado antes
+      document.getElementById('popup-descuento').style.display = 'block';
+      // Marca el pop-up como mostrado
+      localStorage.setItem('popupShown', 'true');
+    }
+  }
+
+  // Función para cerrar el pop-up
+  function cerrarPopup() {
+    document.getElementById('popup-descuento').style.display = 'none';
+  }
+
+  // Llama a la función checkPopup cuando se cargue la página
+  window.onload = checkPopup;
+</script>
 {% endblock %}

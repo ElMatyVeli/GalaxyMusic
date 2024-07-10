@@ -21,6 +21,9 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'mostrar_registro' %}">Registro</a></li>
                 {% if user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a></li>
+                <li class="nav-link ml-auto">
+                    <span class="nav-item text-white fw-bold">Bienvenido {{ user.username }}</span>
+                </li>
                 {% endif %}
             </ul>
         </div>

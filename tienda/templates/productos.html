@@ -26,22 +26,68 @@ GalaxyMusic | Productos
       width: 32%;
     }
   }
+  .filters-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .filters-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 200px;
+  }
+  .filters-list .btn {
+    width: 100%;
+  }
+  .fixed-top {
+    pointer-events: none;
+  }
+  .alert {
+    pointer-events: auto;
+  }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="container">
+  <!-- Notificaciones -->
+  <div id="notificationContainer" class="fixed-top mt-3" style="z-index: 1050; width: 100%; display: flex; justify-content: center;"></div>
+
   <h1 class="mt-5 mb-4">Todos los Productos</h1>
+
+  <div class="mb-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre...">
+  </div>
+  
+  <div class="mb-3">
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">
+      Filtros
+    </button>
+    <div class="collapse mt-2" id="filtersCollapse">
+      <ul class="filters-list">
+        <li><button type="button" class="btn btn-secondary" id="sortPriceDescBtn">Precio (mayor-menor)</button></li>
+        <li><button type="button" class="btn btn-secondary" id="sortPriceAscBtn">Precio (menor-mayor)</button></li>
+        <li><button type="button" class="btn btn-secondary" id="sortNameBtn">Alfabéticamente (A-Z)</button></li>
+        <li><button type="button" class="btn btn-secondary" id="hideOutOfStockBtn">Ocultar sin stock</button></li>
+      </ul>
+    </div>
+  </div>
+
   <div class="d-flex flex-wrap justify-content-between" id="productos">
     {% for producto in productos %}
-      <div class="card">
+      <div class="card" data-name="{{ producto.nombre }}" data-price="{{ producto.precio }}" data-stock="{{ producto.stock }}">
         <a href="{% url 'detalle_producto' producto.id %}" class="text-decoration-none">
           <img src="{{ producto.foto_url }}" class="card-img-top" alt="{{ producto.nombre }}" />
           <div class="card-body">
             <h5 class="card-title">{{ producto.nombre }}</h5>
             <p class="card-text">Precio: ${{ producto.precio }}</p>
-            <div class="d-flex justify-content-end">
-              <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-sm btn-primary"><i class="fas fa-cart-plus"></i> Agregar al Carrito</a>
+            <div class="btn-group d-flex justify-content-between align-items-center">
+              <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-primary add-to-cart" data-name="{{ producto.nombre }}">Agregar al carrito</a>
             </div>
           </div>
         </a>
@@ -49,4 +95,91 @@ GalaxyMusic | Productos
     {% endfor %}
   </div>
 </div>
+
+{% block javascript %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const productsContainer = document.getElementById('productos');
+  const searchInput = document.getElementById('searchInput');
+  const sortNameBtn = document.getElementById('sortNameBtn');
+  const sortPriceAscBtn = document.getElementById('sortPriceAscBtn');
+  const sortPriceDescBtn = document.getElementById('sortPriceDescBtn');
+  const notificationContainer = document.getElementById('notificationContainer');
+  const hideOutOfStockBtn = document.getElementById('hideOutOfStockBtn');
+  let hideOutOfStock = false;
+
+  function toggleOutOfStockProducts() {
+    hideOutOfStock = !hideOutOfStock;
+    const products = Array.from(productsContainer.children);
+    products.forEach(product => {
+      const stock = parseInt(product.getAttribute('data-stock'));
+      if (hideOutOfStock && stock === 0) {
+        product.style.display = 'none';
+      } else {
+        product.style.display = '';
+      }
+    });
+    hideOutOfStockBtn.textContent = hideOutOfStock ? 'Mostrar sin stock' : 'Ocultar sin stock';
+  }
+
+  hideOutOfStockBtn.addEventListener('click', toggleOutOfStockProducts);
+
+  function sortProducts(criteria) {
+    const products = Array.from(productsContainer.children);
+    products.sort((a, b) => {
+      if (criteria === 'name') {
+        return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+      } else if (criteria === 'priceAsc') {
+        return parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price'));
+      } else if (criteria === 'priceDesc') {
+        return parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price'));
+      }
+    });
+    products.forEach(product => productsContainer.appendChild(product));
+  }
+
+  function searchProducts() {
+    const query = searchInput.value.toLowerCase();
+    const products = Array.from(productsContainer.children);
+    products.forEach(product => {
+      const name = product.getAttribute('data-name').toLowerCase();
+      product.style.display = name.includes(query) ? '' : 'none';
+    });
+  }
+
+  function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-success alert-dismissible fade show';
+    notification.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    notificationContainer.appendChild(notification);
+
+    // Eliminar la notificación después de 2 segundos
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 150);
+    }, 2000);
+  }
+
+  sortNameBtn.addEventListener('click', () => sortProducts('name'));
+  sortPriceAscBtn.addEventListener('click', () => sortProducts('priceAsc'));
+  sortPriceDescBtn.addEventListener('click', () => sortProducts('priceDesc'));
+  searchInput.addEventListener('input', searchProducts);
+
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const productName = this.getAttribute('data-name');
+      // Mantener la lógica de redirección del botón
+      window.location.href = this.href;
+      // Mostrar la notificación
+      showNotification(`Producto "${productName}" agregado al carrito.`);
+    });
+  });
+});
+</script>
+{% endblock %}
+
 {% endblock %}

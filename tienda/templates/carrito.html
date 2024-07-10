@@ -19,7 +19,18 @@ GalaxyMusic | Carrito
 {% block body %}
 <div class="container">
   <h1 class="mt-5 mb-4">Carrito de Compras</h1>
-
+   {% if items_carrito %}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          {% if 'descuento' in message.tags %}
+            <li class="success">{{ message }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endif %}
+  
   {% if items_carrito %}
     <div class="table-responsive">
       <table class="table">
@@ -53,14 +64,37 @@ GalaxyMusic | Carrito
               </td>
             </tr>
           {% endfor %}
+          <tr>
+            <td colspan="3" class="text-right"><strong>Total:</strong></td>
+            <td colspan="2"><strong>{{ total_carrito|floatformat:2 }}</strong></td>
+          </tr>
         </tbody>
       </table>
     </div>
     <div class="mt-3">
-      <a href="{% url 'realizar_pago' %}" class="btn btn-success">Realizar Pago</a>
+      <form method="post" action="{% url 'aplicar_descuento' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="text" name="codigo_descuento" class="form-control" placeholder="Ingrese código de descuento">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">Aplicar Descuento</button>
+          </div>
+        </div>
+      </form>
+      <p>Total con descuento: {{ total_con_descuento|floatformat:2 }}</p>
+      <a href="{% url 'realizar_pago' %}" class="btn btn-success" id="confirmarPago">Realizar Pago</a>
     </div>
   {% else %}
     <p>No hay productos en el carrito.</p>
   {% endif %}
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('confirmarPago').addEventListener('click', function(event) {
+    if (!confirm('¿Está seguro de proceder con el pago?')) {
+      event.preventDefault(); // Cancela la acción de redireccionamiento
+    }
+  });
+});
+</script>
 {% endblock %}
