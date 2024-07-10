@@ -1,13 +1,9 @@
-# forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from django.forms import Form, CharField,IntegerField,DateField, PasswordInput, EmailField, EmailInput, CheckboxInput, BooleanField, TextInput
-from django.contrib.auth.forms import AuthenticationForm
 from datetime import date
 
-# Formulario de Registro de Usuario
 class FormularioRegistro(UserCreationForm):
     username = forms.CharField(
         max_length=30,
@@ -82,8 +78,7 @@ class FormularioEntrar(AuthenticationForm):
 
     def get_user(self):
         return self.user_cache
-    
- 
+
 class FormularioPago(forms.Form):
     numero_tarjeta = forms.IntegerField(
         label='Número de Tarjeta', 
