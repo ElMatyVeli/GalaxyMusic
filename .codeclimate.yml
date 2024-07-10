@@ -1,0 +1,14 @@
+version: "2"
+exclude_patterns:
+  - "tienda/test_views.py"
+plugins:
+  duplication:
+    enabled: true
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  rubocop:
+    enabled: true
+  coverage:
+    enabled: true
