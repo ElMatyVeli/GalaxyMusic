@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from datetime import date
 
 # Función auxiliar para crear campos comunes con sus widgets
-def crear_campo_etiqueta_clase(max_length, required, label, widget_class, widget_attrs):
+def crear_campo(max_length, required, label, widget_class, widget_attrs):
     return forms.CharField(
         max_length=max_length,
         required=required,
@@ -14,42 +14,42 @@ def crear_campo_etiqueta_clase(max_length, required, label, widget_class, widget
     )
 
 class FormularioRegistro(UserCreationForm):
-    username = crear_campo_etiqueta_clase(
+    username = crear_campo(
         max_length=30,
         required=True,
         label='Nombre de usuario',
         widget_class=forms.TextInput,
         widget_attrs={'class': 'form-control'}
     )
-    password1 = crear_campo_etiqueta_clase(
+    password1 = crear_campo(
         max_length=30,
         required=True,
         label='Contraseña',
         widget_class=forms.PasswordInput,
         widget_attrs={'class': 'form-control'}
     )
-    password2 = crear_campo_etiqueta_clase(
+    password2 = crear_campo(
         max_length=30,
         required=True,
         label='Confirmar contraseña',
         widget_class=forms.PasswordInput,
         widget_attrs={'class': 'form-control'}
     )
-    first_name = crear_campo_etiqueta_clase(
+    first_name = crear_campo(
         max_length=30,
         required=True,
         label='Nombre',
         widget_class=forms.TextInput,
         widget_attrs={'class': 'form-control'}
     )
-    last_name = crear_campo_etiqueta_clase(
+    last_name = crear_campo(
         max_length=30,
         required=True,
         label='Apellido',
         widget_class=forms.TextInput,
         widget_attrs={'class': 'form-control'}
     )
-    email = crear_campo_etiqueta_clase(
+    email = crear_campo(
         max_length=254,
         required=True,
         label='Correo electrónico',
@@ -68,14 +68,14 @@ class FormularioRegistro(UserCreationForm):
             field.widget.attrs.update({'class': 'form-control'})
 
 class FormularioEntrar(AuthenticationForm):
-    username = crear_campo_etiqueta_clase(
+    username = crear_campo(
         max_length=150,
         required=True,
         label='Nombre de usuario',
         widget_class=forms.TextInput,
         widget_attrs={'class': 'form-control'}
     )
-    password = crear_campo_etiqueta_clase(
+    password = crear_campo(
         max_length=30,
         required=True,
         label='Contraseña',
@@ -97,13 +97,22 @@ class FormularioEntrar(AuthenticationForm):
     def get_user(self):
         return self.user_cache
 
+# Función auxiliar para crear campos de formularios de pago
+def crear_campo_pago(label, min_value, max_value, placeholder):
+    return forms.IntegerField(
+        label=label,
+        min_value=min_value,
+        max_value=max_value,
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder': placeholder, 'class': 'form-control'})
+    )
+
 class FormularioPago(forms.Form):
-    numero_tarjeta = forms.IntegerField(
+    numero_tarjeta = crear_campo_pago(
         label='Número de Tarjeta',
         min_value=1000000000000000,
         max_value=9999999999999999,
-        required=True,
-        widget=forms.NumberInput(attrs={'placeholder': 'XXXX XXXX XXXX XXXX', 'class': 'form-control'})
+        placeholder='XXXX XXXX XXXX XXXX'
     )
     fecha_vencimiento = forms.DateField(
         label='Fecha de Vencimiento',
@@ -111,12 +120,11 @@ class FormularioPago(forms.Form):
         input_formats=['%m/%y'],
         widget=forms.DateInput(attrs={'placeholder': 'MM/YY', 'class': 'form-control'}, format='%m/%y')
     )
-    codigo_seguridad = forms.IntegerField(
+    codigo_seguridad = crear_campo_pago(
         label='Código de Seguridad',
         min_value=100,
         max_value=999,
-        required=True,
-        widget=forms.NumberInput(attrs={'placeholder': 'XXX', 'class': 'form-control'})
+        placeholder='XXX'
     )
 
     def clean_fecha_vencimiento(self):
