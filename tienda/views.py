@@ -17,17 +17,17 @@ from decimal import Decimal
 from django.db.models import Q
 import logging
 from django.core.mail import send_mail
-
+ 
 # Inicialización de Firebase Admin SDK con la credencial descargada
 cred_path = os.path.join(settings.BASE_DIR, 'tienda', 'galaxymusic-6c651-firebase-adminsdk-9ika2-641ef26708.json')
 cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred)
-
+ 
 # Configuración del logger
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-
+ 
+ 
 @csrf_exempt
 @require_http_methods(["POST"])
 def validacion_stock(request):
@@ -35,31 +35,31 @@ def validacion_stock(request):
         data = json.loads(request.body)
         nombre_producto = data.get('nombre')
         cantidad_comprada = data.get('cantidad')
-
+ 
         if not nombre_producto or not cantidad_comprada:
             return JsonResponse({'error': 'Datos incompletos'}, status=400)
-
+ 
         db = firestore.client()
-
+ 
         producto_ref = db.collection('productos').where('nombre', '==', nombre_producto).limit(1).stream()
         for doc in producto_ref:
             producto_data = doc.to_dict()
             nuevo_stock = producto_data['stock'] - cantidad_comprada
             if nuevo_stock < 0:
                 return JsonResponse({'error': 'Stock insuficiente'}, status=400)
-
+ 
             producto = Producto.objects.get(codigo=producto_data['codigo'])
             producto.stock = nuevo_stock
             producto.save()
-
+ 
             return JsonResponse({'mensaje': 'Stock suficiente'}, status=200)
-
+ 
         return JsonResponse({'error': 'Producto no encontrado'}, status=404)
-
+ 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-
-
+ 
+ 
 # Función para obtener productos desde Firestore y actualizar en la base de datos local
 def obtener_productos_desde_firestore():
     db = firestore.client()
@@ -79,27 +79,27 @@ def obtener_productos_desde_firestore():
         )
         productos.append(producto)
     return productos
-
-
+ 
+ 
 # Vista principal del sitio web con productos obtenidos desde Firestore
 def index(request):
     productos = obtener_productos_desde_firestore()
     return render(request, 'index.html', {'productos': productos})
-
-
+ 
+ 
 # Vista para mostrar todos los productos obtenidos desde Firestore
 def productos(request):
     productos = obtener_productos_desde_firestore()
     return render(request, 'productos.html', {'productos': productos})
-
-
+ 
+ 
 # Vista para mostrar el detalle de un producto específico
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     return render(request, 'detalle_producto.html', {'producto': producto})
-
-
-
+ 
+ 
+ 
 # Vista para el carrito
 def carrito(request):
     if request.user.is_authenticated:
@@ -110,24 +110,24 @@ def carrito(request):
             request.session.create()
             session_key = request.session.session_key
         items_carrito = ItemCarrito.objects.filter(session_key=session_key)
-
+ 
     for item in items_carrito:
         item.total = item.producto.precio * item.cantidad
-
+ 
     total_carrito = sum(item.total for item in items_carrito)
     total_con_descuento = total_carrito
     descuento = request.session.get('descuento', 0)
     total_con_descuento = total_carrito * (Decimal('1.0') - (Decimal(descuento) / Decimal('100.0')))
-
+ 
     context = {
         'items_carrito': items_carrito,
         'total_con_descuento': total_con_descuento,
         'total_carrito': total_carrito,
     }
     return render(request, 'carrito.html', context)
-
-
-
+ 
+ 
+ 
 # Aplicar descuento al carrito
 def aplicar_descuento(request):
     if request.method == 'POST':
@@ -139,29 +139,28 @@ def aplicar_descuento(request):
             request.session['descuento'] = 0
             messages.error(request, 'Código de descuento no válido.', extra_tags='descuento')
     return redirect('carrito')
-
-
+ 
 def realizar_pago(request):
     boleta = {}
     if not request.user.is_authenticated:
         messages.error(request, 'Debe estar autenticado para realizar el pago.', extra_tags='autenticado')
         return redirect('mostrar_ingresar')
-
+ 
     items_carrito = ItemCarrito.objects.filter(usuario=request.user)
     for item in items_carrito:
         if item.cantidad > item.producto.stock:
             messages.error(request, f"No hay suficiente stock disponible para '{item.producto.nombre}'. Por favor, actualiza la cantidad en tu carrito.")
             return redirect('carrito')
-
+ 
     descuento = request.session.get('descuento', 0)
     total = sum(item.producto.precio * item.cantidad for item in items_carrito)
     total_con_descuento = total * (Decimal('1.0') - (Decimal(descuento) / Decimal('100.0')))
-
+ 
     if request.method == 'POST':
         formulario_pago = FormularioPago(request.POST)
         if formulario_pago.is_valid():
             items_para_boleta = list(items_carrito)
-
+ 
             boleta = {
                 'usuario': request.user.username,
                 'items': [{
@@ -173,10 +172,10 @@ def realizar_pago(request):
                 'mensaje': 'Pago realizado exitosamente',
                 'fecha_emision': datetime.now().strftime('%d/%m/%Y')
             }
-
+ 
             db = firestore.client()
             errores = []
-
+ 
             for item in items_para_boleta:
                 try:
                     producto_ref = db.collection('productos').where('nombre', '==', item.producto.nombre).limit(1).stream()
@@ -188,11 +187,11 @@ def realizar_pago(request):
                             doc.reference.update({'stock': nuevo_stock})
                 except Exception as e:
                     errores.append(f'Error al actualizar el stock para {item.producto.nombre}: {str(e)}')
-
+ 
             if errores:
                 for error in errores:
                     messages.error(request, error)
-
+ 
             items_carrito.delete()
             messages.success(request, 'Pago realizado exitosamente')
                 
@@ -200,12 +199,12 @@ def realizar_pago(request):
             subject = 'Boleta de compra - GalaxyMusic'
             message = f"""
             Hola {request.user.username},
-
+ 
                 Gracias por tu compra en GalaxyMusic. Aquí tienes los detalles de tu boleta:
-
+ 
                 Fecha de emisión: {boleta['fecha_emision']}
                 Total: ${boleta['total']}
-
+ 
                 Detalles de los productos:
                 """
             for item in boleta['items']:
@@ -214,10 +213,10 @@ def realizar_pago(request):
             from_email = 'galaxymusic2024@gmail.com'
             recipient_list = [request.user.email]
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
+ 
     else:
         formulario_pago = FormularioPago()
-
+ 
     contexto = {
         'formulario_pago': formulario_pago,
         'boleta': boleta,
@@ -226,8 +225,8 @@ def realizar_pago(request):
         'subtotal': total,
     }
     return render(request, 'pago.html', contexto)
-
-
+ 
+ 
 # Agregar producto al carrito
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
@@ -243,8 +242,8 @@ def agregar_al_carrito(request, producto_id):
         item_carrito.cantidad += 1
         item_carrito.save()
     return redirect('carrito')
-
-
+ 
+ 
 # Eliminar producto del carrito
 def eliminar_del_carrito(request, item_id):
     if request.user.is_authenticated:
@@ -254,8 +253,8 @@ def eliminar_del_carrito(request, item_id):
         item_carrito = get_object_or_404(ItemCarrito, id=item_id, session_key=session_key)
     item_carrito.delete()
     return redirect('carrito')
-
-
+ 
+ 
 # Actualizar cantidad de producto en el carrito
 def actualizar_cantidad(request, item_id):
     if request.user.is_authenticated:
@@ -269,8 +268,8 @@ def actualizar_cantidad(request, item_id):
             item_carrito.cantidad = int(cantidad)
             item_carrito.save()
     return redirect('carrito')
-
-
+ 
+ 
 # Vista para mostrar formulario de inicio de sesión
 @csrf_exempt
 def mostrar_ingresar(request):
@@ -288,8 +287,8 @@ def mostrar_ingresar(request):
             messages.error(request, 'Nombre de usuario o contraseña incorrectos')
         contexto = {'titulo': 'Ingresar', 'formulario': formulario}
         return render(request, 'ingresar.html', contexto)
-
-
+ 
+ 
 # Vista para mostrar formulario de registro
 @csrf_exempt
 def mostrar_registro(request):
@@ -310,7 +309,7 @@ def mostrar_registro(request):
             recipient_list = [nuevo_usuario.email]
             
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-
+ 
             if request.content_type == 'application/json':
                 return JsonResponse({'mensaje': 'Registro exitoso', 'usuario': nuevo_usuario.username})
             else:
@@ -326,8 +325,8 @@ def mostrar_registro(request):
         formulario = FormularioRegistro()
         contexto = {'titulo': 'Regístrate', 'formulario': formulario}
         return render(request, 'registro.html', contexto)
-
-
+ 
+ 
 # Función para cerrar sesión
 def cerrar_sesion(request):
     logout(request)
