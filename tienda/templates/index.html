@@ -93,6 +93,21 @@ GalaxyMusic | Inicio
       width: calc(25% - 1rem); /* Cuatro cartas por fila en pantallas extra grandes */
     }
   }
+
+  .notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+  }
+
+  .alert-dismissible .btn-close {
+    position: relative;
+    top: -2px;
+    right: -10px;
+    z-index: 2;
+  }
+
 </style>
 {% endblock %}
 
@@ -130,14 +145,15 @@ GalaxyMusic | Inicio
         </div>
       </a>
       <div class="btn-group d-flex justify-content-between align-items-center">
-        <button type="button" class="btn-agregar btn btn-sm btn-outline-secondary" onclick="agregarAlCarrito('{{ producto.nombre|escapejs }}', '{{ producto.precio|escapejs }}');">
-          Agregar al carrito
-        </button>
+         <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-primary add-to-cart" data-name="{{ producto.nombre }}">Agregar al carrito</a>
       </div>
     </li>
     {% endfor %}
   </ul>
 </section>
+
+<div class="notification-container" id="notification-container"></div>
+
 <!-- Pop-up de felicitaciones -->
 <div class="popup" id="popup-descuento" style="display: none;">
   <span class="popup-close" onclick="cerrarPopup()">&times;</span>
@@ -157,11 +173,40 @@ GalaxyMusic | Inicio
       localStorage.setItem('popupShown', 'true');
     }
   }
-
+  
   // Función para cerrar el pop-up
   function cerrarPopup() {
     document.getElementById('popup-descuento').style.display = 'none';
   }
+
+  // Función para mostrar notificación cerrable
+  function showNotification(message) {
+    const notificationContainer = document.getElementById('notification-container');
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-success alert-dismissible fade show';
+    notification.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    notificationContainer.appendChild(notification);
+    // Eliminar la notificación después de 2 segundos
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => notification.remove(), 150);
+    }, 2000);
+  }
+
+  // Escuchar clics en los botones de "Agregar al carrito"
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      const productName = this.getAttribute('data-name');
+      // Mantener la lógica de redirección del botón
+      window.location.href = this.href;
+      // Mostrar la notificación
+      showNotification(`Producto "${productName}" agregado al carrito.`);
+    });
+  });
 
   // Llama a la función checkPopup cuando se cargue la página
   window.onload = checkPopup;

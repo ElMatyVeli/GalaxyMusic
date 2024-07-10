@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .models import Producto, ItemCarrito
 from .forms import FormularioRegistro, FormularioEntrar, FormularioPago
-from django.conf import settings
 import json
 import os
+from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -141,9 +141,8 @@ def aplicar_descuento(request):
     return redirect('carrito')
 
 
-# Proceso de pago
 def realizar_pago(request):
-    boleta = {} 
+    boleta = {}
     if not request.user.is_authenticated:
         messages.error(request, 'Debe estar autenticado para realizar el pago.', extra_tags='autenticado')
         return redirect('mostrar_ingresar')
@@ -193,9 +192,28 @@ def realizar_pago(request):
             if errores:
                 for error in errores:
                     messages.error(request, error)
-            else:
-                items_carrito.delete()
-                messages.success(request, 'Pago realizado exitosamente')
+
+            items_carrito.delete()
+            messages.success(request, 'Pago realizado exitosamente')
+                
+            # Enviar correo electrónico con la boleta
+            subject = 'Boleta de compra - GalaxyMusic'
+            message = f"""
+            Hola {request.user.username},
+
+                Gracias por tu compra en GalaxyMusic. Aquí tienes los detalles de tu boleta:
+
+                Fecha de emisión: {boleta['fecha_emision']}
+                Total: ${boleta['total']}
+
+                Detalles de los productos:
+                """
+            for item in boleta['items']:
+                message += f"\n- {item['producto'].nombre} (Código: {item['codigo']}), Cantidad: {item['cantidad']}"
+            message += "\n\nGracias por comprar con nosotros."
+            from_email = 'galaxymusic2024@gmail.com'
+            recipient_list = [request.user.email]
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
     else:
         formulario_pago = FormularioPago()
@@ -205,6 +223,7 @@ def realizar_pago(request):
         'boleta': boleta,
         'items_carrito': items_carrito if not boleta else boleta['items'],
         'total': total_con_descuento,
+        'subtotal': total,
     }
     return render(request, 'pago.html', contexto)
 
