@@ -4,42 +4,57 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from datetime import date
 
+# Función auxiliar para crear campos comunes con sus widgets
+def crear_campo_etiqueta_clase(max_length, required, label, widget_class, widget_attrs):
+    return forms.CharField(
+        max_length=max_length,
+        required=required,
+        label=label,
+        widget=widget_class(attrs=widget_attrs)
+    )
+
 class FormularioRegistro(UserCreationForm):
-    username = forms.CharField(
+    username = crear_campo_etiqueta_clase(
         max_length=30,
         required=True,
         label='Nombre de usuario',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget_class=forms.TextInput,
+        widget_attrs={'class': 'form-control'}
     )
-    password1 = forms.CharField(
+    password1 = crear_campo_etiqueta_clase(
         max_length=30,
         required=True,
         label='Contraseña',
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget_class=forms.PasswordInput,
+        widget_attrs={'class': 'form-control'}
     )
-    password2 = forms.CharField(
+    password2 = crear_campo_etiqueta_clase(
         max_length=30,
         required=True,
         label='Confirmar contraseña',
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget_class=forms.PasswordInput,
+        widget_attrs={'class': 'form-control'}
     )
-    first_name = forms.CharField(
+    first_name = crear_campo_etiqueta_clase(
         max_length=30,
         required=True,
         label='Nombre',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget_class=forms.TextInput,
+        widget_attrs={'class': 'form-control'}
     )
-    last_name = forms.CharField(
+    last_name = crear_campo_etiqueta_clase(
         max_length=30,
         required=True,
         label='Apellido',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget_class=forms.TextInput,
+        widget_attrs={'class': 'form-control'}
     )
-    email = forms.EmailField(
+    email = crear_campo_etiqueta_clase(
         max_length=254,
         required=True,
         label='Correo electrónico',
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        widget_class=forms.EmailInput,
+        widget_attrs={'class': 'form-control'}
     )
 
     class Meta:
@@ -53,16 +68,19 @@ class FormularioRegistro(UserCreationForm):
             field.widget.attrs.update({'class': 'form-control'})
 
 class FormularioEntrar(AuthenticationForm):
-    username = forms.CharField(
+    username = crear_campo_etiqueta_clase(
         max_length=150,
         required=True,
         label='Nombre de usuario',
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget_class=forms.TextInput,
+        widget_attrs={'class': 'form-control'}
     )
-    password = forms.CharField(
+    password = crear_campo_etiqueta_clase(
+        max_length=30,
         required=True,
         label='Contraseña',
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget_class=forms.PasswordInput,
+        widget_attrs={'class': 'form-control'}
     )
 
     def clean(self):
@@ -81,22 +99,22 @@ class FormularioEntrar(AuthenticationForm):
 
 class FormularioPago(forms.Form):
     numero_tarjeta = forms.IntegerField(
-        label='Número de Tarjeta', 
-        min_value=1000000000000000,  # Valor mínimo para una tarjeta de 16 dígitos
-        max_value=9999999999999999,  # Valor máximo para una tarjeta de 16 dígitos
+        label='Número de Tarjeta',
+        min_value=1000000000000000,
+        max_value=9999999999999999,
         required=True,
         widget=forms.NumberInput(attrs={'placeholder': 'XXXX XXXX XXXX XXXX', 'class': 'form-control'})
     )
     fecha_vencimiento = forms.DateField(
-        label='Fecha de Vencimiento', 
+        label='Fecha de Vencimiento',
         required=True,
         input_formats=['%m/%y'],
         widget=forms.DateInput(attrs={'placeholder': 'MM/YY', 'class': 'form-control'}, format='%m/%y')
     )
     codigo_seguridad = forms.IntegerField(
-        label='Código de Seguridad', 
-        min_value=100,  # Valor mínimo para un código de 3 dígitos
-        max_value=999,  # Valor máximo para un código de 3 dígitos
+        label='Código de Seguridad',
+        min_value=100,
+        max_value=999,
         required=True,
         widget=forms.NumberInput(attrs={'placeholder': 'XXX', 'class': 'form-control'})
     )
