@@ -1,12 +1,13 @@
+import os
+from django.conf import settings
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-from .models import Producto, ItemCarrito
+from .models import Producto, ItemCarrito, Venta, VentaItem
 from .forms import FormularioRegistro, FormularioEntrar, FormularioPago
 import json
-import os
-from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -17,6 +18,8 @@ from decimal import Decimal
 from django.db.models import Q
 import logging
 from django.core.mail import send_mail
+from django.utils.dateparse import parse_date
+
 
 # Inicialización de Firebase Admin SDK con la credencial descargada
 cred_path = os.path.join(settings.BASE_DIR, 'tienda', 'galaxymusic-6c651-firebase-adminsdk-9ika2-641ef26708.json')
@@ -26,6 +29,37 @@ firebase_admin.initialize_app(cred)
 # Configuración del logger
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+
+
+@require_http_methods(["GET"])
+def ventas_por_fecha(request):
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+
+    if not fecha_inicio or not fecha_fin:
+        return JsonResponse({'error': 'Por favor, proporcione fecha de inicio y fecha de fin'}, status=400)
+
+    try:
+        fecha_inicio = parse_date(fecha_inicio)
+        fecha_fin = parse_date(fecha_fin)
+    except ValueError:
+        return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
+
+    ventas = Venta.objects.filter(fecha__date__range=[fecha_inicio, fecha_fin])
+    ventas_data = []
+    for venta in ventas:
+        items = venta.items.all()
+        items_data = [{'producto': item.producto.nombre, 'cantidad': item.cantidad, 'precio': item.producto.precio} for item in items]
+        ventas_data.append({
+            'id': venta.id,
+            'usuario': venta.usuario.username,
+            'total': venta.total,
+            'fecha': venta.fecha,
+            'items': items_data
+        })
+
+    return JsonResponse(ventas_data, safe=False)
 
 
 @csrf_exempt
@@ -59,7 +93,22 @@ def validacion_stock(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-
+def lista_productos(request):
+    productos = Producto.objects.all().values('nombre', 'precio', 'stock','codigo')
+    productos_list = list(productos)
+    return JsonResponse(productos_list, safe=False)
+  
+    
+def detalle_producto_por_codigo(request, codigo_producto):
+    producto = get_object_or_404(Producto, codigo=codigo_producto)
+    producto_data = {
+        'nombre': producto.nombre,
+        'precio': producto.precio,
+        'stock': producto.stock
+    }
+    return JsonResponse(producto_data)
+    
+    
 # Función para obtener productos desde Firestore y actualizar en la base de datos local
 def obtener_productos_desde_firestore():
     db = firestore.client()
@@ -140,7 +189,6 @@ def aplicar_descuento(request):
             messages.error(request, 'Código de descuento no válido.', extra_tags='descuento')
     return redirect('carrito')
 
-
 def realizar_pago(request):
     boleta = {}
     if not request.user.is_authenticated:
@@ -150,7 +198,7 @@ def realizar_pago(request):
     items_carrito = ItemCarrito.objects.filter(usuario=request.user)
     for item in items_carrito:
         if item.cantidad > item.producto.stock:
-            messages.error(request, f"No hay suficiente stock disponible para '{item.producto.nombre}'. Por favor, actualiza la cantidad en tu carrito.")
+            messages.error(request, f"No hay suficiente stock disponible para '{item.producto.nombre}'. Por favor, actualiza la cantidad en tu carrito.", extra_tags='stock')
             return redirect('carrito')
 
     descuento = request.session.get('descuento', 0)
@@ -174,6 +222,11 @@ def realizar_pago(request):
                 'fecha_emision': datetime.now().strftime('%d/%m/%Y')
             }
 
+            # Registrar la venta
+            venta = Venta.objects.create(usuario=request.user, total=total_con_descuento)
+            for item in items_para_boleta:
+                VentaItem.objects.create(venta=venta, producto=item.producto, cantidad=item.cantidad)
+
             db = firestore.client()
             errores = []
 
@@ -191,10 +244,10 @@ def realizar_pago(request):
 
             if errores:
                 for error in errores:
-                    messages.error(request, error)
+                    messages.error(request, error, extra_tags='error')
 
             items_carrito.delete()
-            messages.success(request, 'Pago realizado exitosamente')
+            messages.success(request, 'Pago realizado exitosamente', extra_tags='pagoexito')
                 
             # Enviar correo electrónico con la boleta
             subject = 'Boleta de compra - GalaxyMusic'

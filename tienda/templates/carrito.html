@@ -26,6 +26,15 @@ GalaxyMusic | Carrito
           {% if 'descuento' in message.tags %}
             <li class="success">{{ message }}</li>
           {% endif %}
+          {% if message.tags == 'stock' %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+          {% else %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+          {% endif %}
         {% endfor %}
       </ul>
     {% endif %}

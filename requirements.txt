@@ -5,6 +5,7 @@ cachetools==5.3.3
 certifi==2024.6.2
 chardet==5.2.0
 charset-normalizer==3.3.2
+colorama==0.4.6
 Django==5.0.2
 firebase-admin==5.1.0
 google-api-core==2.19.1
@@ -22,10 +23,13 @@ grpcio-status==1.62.2
 html5lib==1.1
 httplib2==0.22.0
 idna==3.7
+iniconfig==2.0.0
 msgpack==1.0.8
 mysql==0.0.3
 mysqlclient==2.2.4
+packaging==24.1
 pillow==10.3.0
+pluggy==1.5.0
 proto-plus==1.24.0
 protobuf==4.25.3
 psycopg2==2.9.9
@@ -33,6 +37,8 @@ pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pyparsing==3.1.2
 PyPDF2==3.0.1
+pytest==8.2.2
+pytest-django==4.8.0
 python-bidi==0.4.2
 reportlab==4.2.2
 requests==2.32.3

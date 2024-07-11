@@ -74,6 +74,15 @@ GalaxyMusic | Pago
 {% block body %}
 <div class="container">
   <h1 class="mt-5 mb-4">Realizar Pago</h1>
+  {% if messages %}
+         <ul class="messages">
+            {% for message in messages %}
+            {% if 'pagoexito' in message.tags %}
+              <li class="success">{{ message }}</li>
+            {% endif %}
+            {% endfor %}
+         </ul>
+      {% endif %}
   {% if boleta %}
     <div class="boleta-container">
       <div class="boleta">
